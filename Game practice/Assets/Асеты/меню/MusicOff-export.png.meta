@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5a361f100fb43644780861e248aff82f
+guid: c87fbad50f6953e4584cdcf4e7e3cfc0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9067497380400022878
-    second: wood_panel_0
+      213: -4436479193634839666
+    second: MusicOff-export_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wood_panel_0
+      name: MusicOff-export_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 48
-        height: 48
+        x: 9
+        y: 19
+        width: 132
+        height: 132
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2aab8779c27c92280800000000000000
-      internalID: -9067497380400022878
+      spriteID: e83ebf9cda57e62c0800000000000000
+      internalID: -4436479193634839666
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      wood_panel_0: -9067497380400022878
+      MusicOff-export_0: -4436479193634839666
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -12,7 +13,7 @@ TagManager:
   - Water
   - UI
   - "\u043A\u043E\u043D\u0435\u0446"
-  - 
+  - Player
   - 
   - 
   - 
@@ -41,8 +42,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: "\u043A\u043E\u043D\u0435\u0446"
+  - name: BackGround
     uniqueID: 3717004481
+    locked: 0
+  - name: Player
+    uniqueID: 2822091131
     locked: 0
   m_RenderingLayers:
   - Default

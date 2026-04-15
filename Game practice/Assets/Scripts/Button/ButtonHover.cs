@@ -16,7 +16,8 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     void Update()
     {
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * speed);
+        // ИСПРАВЛЕНО: Time.deltaTime → Time.unscaledDeltaTime
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * speed);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -28,6 +29,7 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         targetScale = normalScale;
     }
+
     void OnDisable()
     {
         transform.localScale = normalScale;

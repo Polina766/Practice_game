@@ -1,4 +1,5 @@
-using UnityEngine;
+п»їusing UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,13 +8,24 @@ public class PlayerController : MonoBehaviour
     public bool OnGround = false;
     public float MoveSpeed = 5f;
 
+    [Header("РќР°СЃС‚СЂРѕР№РєРё РїРѕР»Р°")]
+    public float floorY = -1.5f;
+
+    [Header("РЎС‚СЂРµР»РѕС‡РєР°")]
+    public MoveIndicator moveIndicator;
+
+    [Header("РќР°СЃС‚СЂРѕР№РєРё РїСЂРµРїСЏС‚СЃС‚РІРёР№")]
+    public LayerMask obstacleLayer;
+
     private Rigidbody2D PlayerRigidbody2D;
     private SpriteRenderer PlayerSpriteRenderer;
     private Animator Player;
 
-    // Для движения по клику
     private Vector2 clickTarget;
     private bool isMovingToClick = false;
+
+    private Vector2 lastPosition;
+    private float stuckTime = 0f;
 
     void Start()
     {
@@ -23,52 +35,95 @@ public class PlayerController : MonoBehaviour
 
         PlayerRigidbody2D.gravityScale = 1;
         clickTarget = transform.position;
+        lastPosition = transform.position;
+
+        if (gameObject.tag != "Player")
+        {
+            gameObject.tag = "Player";
+        }
+
+        if (obstacleLayer == 0)
+        {
+            obstacleLayer = LayerMask.GetMask("Default");
+        }
     }
 
     void Update()
     {
-        // ============ ДВИЖЕНИЕ ПО КЛАВИШАМ ============
+        // ============ Р•РЎР›Р РР“Р Рђ РќРђ РџРђРЈР—Р• - РќРР§Р•Р“Рћ РќР• Р”Р•Р›РђР•Рњ ============
+        if (PauseManager.isPaused)
+        {
+            return;
+        }
+
+        // ============ Р”Р’РР–Р•РќРР• РџРћ РљР›РђР’РРЁРђРњ ============
         float moveX = 0f;
 
-        // WASD + Стрелочки (только влево-вправо)
         if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))
             moveX = 1f;
         else if (Input.GetKey("a") || Input.GetKey(KeyCode.LeftArrow))
             moveX = -1f;
 
-        // Если нажата клавиша движения
         if (moveX != 0)
         {
-            // Отменяем движение по клику
-            isMovingToClick = false;
+            if (isMovingToClick)
+            {
+                isMovingToClick = false;
+                if (moveIndicator != null)
+                    moveIndicator.Hide();
+            }
 
-            // Движение через velocity (быстрое)
             Vector2 moveVector = new Vector2(moveX * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
             PlayerRigidbody2D.linearVelocity = moveVector;
-
-            // Поворот спрайта
             RotatePlayer(moveX < 0);
 
-            // Включаем анимацию
             if (OnGround)
                 Player.SetBool("isWalking", true);
+
+            stuckTime = 0f;
+            lastPosition = transform.position;
         }
 
-        // ============ ДВИЖЕНИЕ ПО КЛИКУ МЫШИ ============
-        // Проверяем клик левой кнопкой мыши
+        // ============ Р”Р’РР–Р•РќРР• РџРћ РљР›РРљРЈ РњР«РЁР ============
         if (Input.GetMouseButtonDown(0))
         {
-            // Получаем позицию мыши в мире
+            // РџСЂРѕРІРµСЂСЏРµРј РєР»РёРє РїРѕ UI
+            if (IsPointerOverUI())
+            {
+                return;
+            }
+
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPos.z = 0;
-            clickTarget = mouseWorldPos;
-            isMovingToClick = true;
+
+            Vector2 targetPosition = new Vector2(mouseWorldPos.x, floorY);
+
+            if (CanReachTarget(targetPosition))
+            {
+                clickTarget = targetPosition;
+                isMovingToClick = true;
+                stuckTime = 0f;
+                lastPosition = transform.position;
+
+                if (moveIndicator != null)
+                    moveIndicator.ShowAtPosition(clickTarget);
+
+                Debug.Log("вњ… РЎС‚СЂРµР»РѕС‡РєР° РїРѕСЃС‚Р°РІР»РµРЅР°! Р¦РµР»СЊ: " + clickTarget);
+            }
+            else
+            {
+                Debug.Log("вќЊ РќРµР»СЊР·СЏ РїРѕСЃС‚Р°РІРёС‚СЊ СЃС‚СЂРµР»РѕС‡РєСѓ! РќР° РїСѓС‚Рё СЃС‚РµРЅР°.");
+
+                if (moveIndicator != null)
+                {
+                    moveIndicator.ShowRedAtPosition(targetPosition);
+                }
+            }
         }
 
-        // Движение к точке клика (только если нет движения с клавиатуры)
+        // Р”РІРёР¶РµРЅРёРµ Рє С‚РѕС‡РєРµ РєР»РёРєР°
         if (isMovingToClick && moveX == 0)
         {
-            // Используем такой же метод движения, как и для клавиш
             float direction = 0f;
 
             if (clickTarget.x > transform.position.x)
@@ -76,51 +131,90 @@ public class PlayerController : MonoBehaviour
             else if (clickTarget.x < transform.position.x)
                 direction = -1f;
 
-            // Применяем скорость (как в движении по клавишам)
-            Vector2 moveVector = new Vector2(direction * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
-            PlayerRigidbody2D.linearVelocity = moveVector;
-
-            // Поворачиваем персонажа
             if (direction != 0)
+            {
+                Vector2 moveVector = new Vector2(direction * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
+                PlayerRigidbody2D.linearVelocity = moveVector;
                 RotatePlayer(direction < 0);
+            }
 
-            // Включаем анимацию
             if (OnGround)
                 Player.SetBool("isWalking", true);
 
-            // Проверяем, дошли ли до цели
+            // РџСЂРѕРІРµСЂРєР° РЅР° Р·Р°СЃС‚СЂРµРІР°РЅРёРµ
+            float distanceMoved = Vector2.Distance(transform.position, lastPosition);
+
+            if (distanceMoved < 0.02f)
+            {
+                stuckTime += Time.deltaTime;
+                if (stuckTime > 0.5f)
+                {
+                    Debug.Log("вљ пёЏ РџРµСЂСЃРѕРЅР°Р¶ Р·Р°СЃС‚СЂСЏР»! РЎС‚СЂРµР»РѕС‡РєР° РёСЃС‡РµР·Р°РµС‚.");
+                    StopMovingToClick();
+                    return;
+                }
+            }
+            else
+            {
+                stuckTime = 0f;
+            }
+
+            lastPosition = transform.position;
+
+            // РџСЂРѕРІРµСЂРєР° РґРѕСЃС‚РёР¶РµРЅРёСЏ С†РµР»Рё
             if (Mathf.Abs(transform.position.x - clickTarget.x) < 0.1f)
             {
+                Debug.Log("вњ… Р”РѕС€Р»Рё РґРѕ С†РµР»Рё!");
                 StopMovingToClick();
             }
         }
 
-        // ============ ОСТАНОВКА АНИМАЦИИ ============
-        // Если нет никакого движения
+        // ============ РћРЎРўРђРќРћР’РљРђ РђРќРРњРђР¦РР ============
         if (moveX == 0 && !isMovingToClick)
         {
             AnimationStop();
             PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
         }
 
-        // ============ ОТМЕНА ДВИЖЕНИЯ ПО КЛИКУ ============
-        // Правая кнопка мыши
-        if (Input.GetMouseButtonDown(1))
-        {
-            StopMovingToClick();
-        }
-
-        // Пробел
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StopMovingToClick();
-        }
-
-        // Escape
+        // ============ РћРўРњР•РќРђ Р”Р’РР–Р•РќРРЇ ============
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             StopMovingToClick();
         }
+    }
+
+    bool IsPointerOverUI()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool CanReachTarget(Vector2 targetPosition)
+    {
+        Vector2 currentPos = transform.position;
+        Vector2 direction = targetPosition - currentPos;
+        float distance = direction.magnitude;
+
+        if (distance < 0.1f)
+            return true;
+
+        direction.Normalize();
+
+        RaycastHit2D hit = Physics2D.Raycast(currentPos, direction, distance, obstacleLayer);
+
+        if (hit.collider != null && hit.collider.gameObject != gameObject)
+        {
+            if (!hit.collider.CompareTag("Floor"))
+            {
+                Debug.Log("РџСЂРµРїСЏС‚СЃС‚РІРёРµ РЅР° РїСѓС‚Рё: " + hit.collider.gameObject.name);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     void RotatePlayer(bool Bool_Value)
@@ -136,14 +230,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Метод для остановки движения по клику
     void StopMovingToClick()
     {
         isMovingToClick = false;
         if (OnGround)
             Player.SetBool("isWalking", false);
-        // Останавливаем физическое движение
         PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+
+        if (moveIndicator != null)
+            moveIndicator.Hide();
     }
 
     void OnCollisionEnter2D(Collision2D collision)

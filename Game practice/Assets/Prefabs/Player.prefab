@@ -82,7 +82,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1472876165
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5485693262063371217, guid: 6293c21114b4e344387afab4df52cfa4, type: 3}
@@ -132,6 +132,12 @@ MonoBehaviour:
   CurrentAnimation: Idle Player
   OnGround: 0
   MoveSpeed: 3.5
+  floorY: 1.2
+  moveIndicator: {fileID: 0}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  pauseManager: {fileID: 0}
 --- !u!50 &8669154632640555134
 Rigidbody2D:
   serializedVersion: 5

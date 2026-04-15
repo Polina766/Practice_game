@@ -16,7 +16,7 @@ TagManager:
   - UI
   - "\u043A\u043E\u043D\u0435\u0446"
   - Player
-  - 
+  - Wall
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: BackGround
     uniqueID: 3717004481
+    locked: 0
+  - name: Arrow
+    uniqueID: 247032649
     locked: 0
   - name: Player
     uniqueID: 2822091131

@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Vector2 VectorToRight = new Vector2(1, 0);
-    private Vector2 VectorToLeft = new Vector2(-1, 0);
     public string CurrentAnimation = "Idle Player";
 
     public bool OnGround = false;
@@ -13,6 +11,10 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer PlayerSpriteRenderer;
     private Animator Player;
 
+    // Для движения по клику
+    private Vector2 clickTarget;
+    private bool isMovingToClick = false;
+
     void Start()
     {
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
@@ -20,36 +22,104 @@ public class PlayerController : MonoBehaviour
         Player = GetComponent<Animator>();
 
         PlayerRigidbody2D.gravityScale = 1;
+        clickTarget = transform.position;
     }
 
     void Update()
     {
-        if (Input.GetKey("d"))
+        // ============ ДВИЖЕНИЕ ПО КЛАВИШАМ ============
+        float moveX = 0f;
+
+        // WASD + Стрелочки (только влево-вправо)
+        if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))
+            moveX = 1f;
+        else if (Input.GetKey("a") || Input.GetKey(KeyCode.LeftArrow))
+            moveX = -1f;
+
+        // Если нажата клавиша движения
+        if (moveX != 0)
         {
-            PlayerMoving(VectorToRight);
-            RotatePlayer(false);
+            // Отменяем движение по клику
+            isMovingToClick = false;
+
+            // Движение через velocity (быстрое)
+            Vector2 moveVector = new Vector2(moveX * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
+            PlayerRigidbody2D.linearVelocity = moveVector;
+
+            // Поворот спрайта
+            RotatePlayer(moveX < 0);
+
+            // Включаем анимацию
+            if (OnGround)
+                Player.SetBool("isWalking", true);
         }
-        else if (Input.GetKey("a"))
+
+        // ============ ДВИЖЕНИЕ ПО КЛИКУ МЫШИ ============
+        // Проверяем клик левой кнопкой мыши
+        if (Input.GetMouseButtonDown(0))
         {
-            PlayerMoving(VectorToLeft);
-            RotatePlayer(true);
+            // Получаем позицию мыши в мире
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = 0;
+            clickTarget = mouseWorldPos;
+            isMovingToClick = true;
         }
-        else
+
+        // Движение к точке клика (только если нет движения с клавиатуры)
+        if (isMovingToClick && moveX == 0)
+        {
+            // Используем такой же метод движения, как и для клавиш
+            float direction = 0f;
+
+            if (clickTarget.x > transform.position.x)
+                direction = 1f;
+            else if (clickTarget.x < transform.position.x)
+                direction = -1f;
+
+            // Применяем скорость (как в движении по клавишам)
+            Vector2 moveVector = new Vector2(direction * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
+            PlayerRigidbody2D.linearVelocity = moveVector;
+
+            // Поворачиваем персонажа
+            if (direction != 0)
+                RotatePlayer(direction < 0);
+
+            // Включаем анимацию
+            if (OnGround)
+                Player.SetBool("isWalking", true);
+
+            // Проверяем, дошли ли до цели
+            if (Mathf.Abs(transform.position.x - clickTarget.x) < 0.1f)
+            {
+                StopMovingToClick();
+            }
+        }
+
+        // ============ ОСТАНОВКА АНИМАЦИИ ============
+        // Если нет никакого движения
+        if (moveX == 0 && !isMovingToClick)
         {
             AnimationStop();
             PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
         }
-    }
 
-    void PlayerMoving(Vector2 MoveVector)
-    {
-        Vector2 NewMoveVector = new Vector2(MoveVector.x * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
-        PlayerRigidbody2D.linearVelocity = NewMoveVector;
-
-        if (OnGround == true)
+        // ============ ОТМЕНА ДВИЖЕНИЯ ПО КЛИКУ ============
+        // Правая кнопка мыши
+        if (Input.GetMouseButtonDown(1))
         {
-            // Устанавливаем параметр isWalking в true
-            Player.SetBool("isWalking", true);
+            StopMovingToClick();
+        }
+
+        // Пробел
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StopMovingToClick();
+        }
+
+        // Escape
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StopMovingToClick();
         }
     }
 
@@ -62,9 +132,18 @@ public class PlayerController : MonoBehaviour
     {
         if (OnGround == true)
         {
-            // Устанавливаем параметр isWalking в false
             Player.SetBool("isWalking", false);
         }
+    }
+
+    // Метод для остановки движения по клику
+    void StopMovingToClick()
+    {
+        isMovingToClick = false;
+        if (OnGround)
+            Player.SetBool("isWalking", false);
+        // Останавливаем физическое движение
+        PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -80,7 +159,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Floor"))
         {
             OnGround = false;
-            // Когда не на полу - останавливаем анимацию ходьбы
             Player.SetBool("isWalking", false);
         }
     }

@@ -21,24 +21,19 @@ public class GearSettings : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         imageComponent = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
 
-        // ПРИНУДИТЕЛЬНО ставим pivot в центр
         Vector2 oldPivot = rectTransform.pivot;
         rectTransform.pivot = new Vector2(0.5f, 0.5f);
 
-        // Компенсируем смещение при смене pivot
         rectTransform.anchoredPosition += new Vector2(
             (0.5f - oldPivot.x) * rectTransform.rect.width,
             (0.5f - oldPivot.y) * rectTransform.rect.height
         );
 
-        // Запоминаем позицию и масштаб
         originalPosition = rectTransform.anchoredPosition;
         originalScale = rectTransform.localScale;
 
         if (normalSprite != null)
             imageComponent.sprite = normalSprite;
-
-       
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -77,13 +72,8 @@ public class GearSettings : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / animDuration;
-
-            // Меняем масштаб
             rectTransform.localScale = Vector3.Lerp(startScale, targetScale, t);
-
-            // ВОЗВРАЩАЕМ позицию обратно (принудительно)
             rectTransform.anchoredPosition = originalPosition;
-
             yield return null;
         }
 

@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   CurrentAnimation: Idle Player
   OnGround: 0
-  MoveSpeed: 3
+  MoveSpeed: 3.5
 --- !u!50 &8669154632640555134
 Rigidbody2D:
   serializedVersion: 5

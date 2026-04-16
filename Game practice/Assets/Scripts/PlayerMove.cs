@@ -29,6 +29,13 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        // Проверяем существует ли ControlManager, если нет - создаём
+        if (ControlManager.Instance == null)
+        {
+            GameObject go = new GameObject("ControlManager");
+            go.AddComponent<ControlManager>();
+        }
+
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
         PlayerSpriteRenderer = GetComponent<SpriteRenderer>();
         Player = GetComponent<Animator>();
@@ -50,21 +57,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // ============ ЕСЛИ ИГРА НА ПАУЗЕ - НИЧЕГО НЕ ДЕЛАЕМ ============
+        // ЕСЛИ ИГРА НА ПАУЗЕ - НИЧЕГО НЕ ДЕЛАЕМ
         if (PauseManager.isPaused)
         {
             return;
         }
 
-        // ============ ДВИЖЕНИЕ ПО КЛАВИШАМ ============
         float moveX = 0f;
 
+        // ============ ЧИТАЕМ НАЖАТИЯ КЛАВИШ (ВСЕГДА) ============
         if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))
             moveX = 1f;
         else if (Input.GetKey("a") || Input.GetKey(KeyCode.LeftArrow))
             moveX = -1f;
 
-        if (moveX != 0)
+        // ============ ДВИЖЕНИЕ ПО КЛАВИШАМ (только если выбран режим клавиатуры) ============
+        if (!ControlManager.Instance.useMouseMovement && moveX != 0)
         {
             if (isMovingToClick)
             {
@@ -84,10 +92,10 @@ public class PlayerController : MonoBehaviour
             lastPosition = transform.position;
         }
 
-        // ============ ДВИЖЕНИЕ ПО КЛИКУ МЫШИ ============
-        if (Input.GetMouseButtonDown(0))
+        // ============ ДВИЖЕНИЕ ПО КЛИКУ МЫШИ (только если выбран режим мыши) ============
+        if (ControlManager.Instance.useMouseMovement && Input.GetMouseButtonDown(0))
         {
-            // Проверяем клик по UI
+            // Проверяем клик по UI (кнопки, головоломки и т.д.)
             if (IsPointerOverUI())
             {
                 return;
@@ -121,8 +129,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Движение к точке клика
-        if (isMovingToClick && moveX == 0)
+        // ============ ДВИЖЕНИЕ К ТОЧКЕ КЛИКА (только для режима мыши) ============
+        if (ControlManager.Instance.useMouseMovement && isMovingToClick && moveX == 0)
         {
             float direction = 0f;
 
@@ -173,11 +181,15 @@ public class PlayerController : MonoBehaviour
         if (moveX == 0 && !isMovingToClick)
         {
             AnimationStop();
-            PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+            // Не обнуляем скорость в режиме мыши, чтобы не мешать физике
+            if (!ControlManager.Instance.useMouseMovement)
+            {
+                PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+            }
         }
 
-        // ============ ОТМЕНА ДВИЖЕНИЯ ============
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // ============ ОТМЕНА ДВИЖЕНИЯ ДЛЯ МЫШИ ============
+        if (ControlManager.Instance.useMouseMovement && Input.GetKeyDown(KeyCode.Escape))
         {
             StopMovingToClick();
         }
@@ -185,10 +197,23 @@ public class PlayerController : MonoBehaviour
 
     bool IsPointerOverUI()
     {
+        // Проверка клика по UI
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             return true;
         }
+
+        // Опционально: проверка клика по объектам головоломок (раскомментируй если нужно)
+        /*
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+        
+        if (hit.collider != null && hit.collider.CompareTag("Puzzle"))
+        {
+            return true; // Не двигаемся, если кликнули по головоломке
+        }
+        */
+
         return false;
     }
 
@@ -256,5 +281,38 @@ public class PlayerController : MonoBehaviour
             OnGround = false;
             Player.SetBool("isWalking", false);
         }
+    }
+
+    public void StopAllMovement()
+    {
+        // Останавливаем движение к стрелочке
+        if (isMovingToClick)
+        {
+            StopMovingToClick();
+        }
+
+        // Останавливаем физическое движение
+        if (PlayerRigidbody2D != null)
+        {
+            PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+        }
+
+        // Останавливаем анимацию ходьбы
+        if (OnGround)
+        {
+            Player.SetBool("isWalking", false);
+        }
+
+        // Прячем стрелочку
+        if (moveIndicator != null)
+        {
+            moveIndicator.Hide();
+        }
+
+        // Сбрасываем флаги
+        isMovingToClick = false;
+        stuckTime = 0f;
+
+        Debug.Log("Движение остановлено при смене управления");
     }
 }

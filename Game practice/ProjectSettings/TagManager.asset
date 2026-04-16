@@ -17,7 +17,7 @@ TagManager:
   - "\u043A\u043E\u043D\u0435\u0446"
   - Player
   - Wall
-  - 
+  - Door
   - 
   - 
   - 
@@ -52,6 +52,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2822091131
+    locked: 0
+  - name: Door
+    uniqueID: 902771029
     locked: 0
   m_RenderingLayers:
   - Default

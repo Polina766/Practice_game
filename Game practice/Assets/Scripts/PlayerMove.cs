@@ -122,10 +122,7 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("❌ Нельзя поставить стрелочку! На пути стена.");
 
-                if (moveIndicator != null)
-                {
-                    moveIndicator.ShowRedAtPosition(targetPosition);
-                }
+                
             }
         }
 

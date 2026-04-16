@@ -61,22 +61,5 @@ public class MoveIndicator : MonoBehaviour
     }
 
     // Метод для показа красной стрелочки (когда нельзя поставить)
-    public void ShowRedAtPosition(Vector2 position)
-    {
-        transform.position = new Vector3(position.x, position.y + 0.3f, 0);
-        transform.localScale = originalScale;
-
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = Color.red;
-        }
-
-        gameObject.SetActive(true);
-        isActive = true;
-        time = 0f;
-
-        // Через 0.3 секунды скрыть
-        CancelInvoke();
-        Invoke("Hide", 0.3f);
-    }
+    
 }

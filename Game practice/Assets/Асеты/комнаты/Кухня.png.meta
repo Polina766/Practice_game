@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 19c9e2b1512193c4ba094e6a287999a4
+guid: be95ee7d609850642a45371f84becf21
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4025988509330119079
-    second: GIRLS ROOM FINAL_0
+      213: 8921796083297982417
+    second: "\u041A\u0443\u0445\u043D\u044F_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GIRLS ROOM FINAL_0
+      name: "\u041A\u0443\u0445\u043D\u044F_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 18000
-        height: 8100
+        width: 8300
+        height: 3600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 956e29708c0d028c0800000000000000
-      internalID: -4025988509330119079
+      spriteID: 1d7927f944690db70800000000000000
+      internalID: 8921796083297982417
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GIRLS ROOM FINAL_0: -4025988509330119079
+      "\u041A\u0443\u0445\u043D\u044F_0": 8921796083297982417
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

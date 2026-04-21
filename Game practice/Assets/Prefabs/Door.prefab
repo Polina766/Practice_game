@@ -105,8 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ebc7bd82ba6eb43a6921b324d23d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  closedSprite: {fileID: -4095864716176318681, guid: 53e5ea36c981d5644843bf2be0a8fcaf, type: 3}
-  openedSprite: {fileID: -290581302, guid: 53e5ea36c981d5644843bf2be0a8fcaf, type: 3}
+  sceneToLoad: Hall
+  doorCursor: {fileID: 2800000, guid: fb78a6e2c757303469d017efdde4f1ca, type: 3}
+  cursorHotspot: {x: 16, y: 16}
 --- !u!61 &4425636565205039452
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -141,7 +142,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.042265445, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0.21, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -151,5 +152,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.21, y: 1.15}
+  m_Size: {x: 0.29453087, y: 1.15}
   m_EdgeRadius: 0

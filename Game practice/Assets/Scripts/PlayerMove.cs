@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class PlayerController : MonoBehaviour
 {
-    public string CurrentAnimation = "Idle Player";
-
     public bool OnGround = false;
     public float MoveSpeed = 5f;
 
@@ -27,15 +26,15 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastPosition;
     private float stuckTime = 0f;
 
+    // Движение к двери
+    private Door targetDoor;
+    private bool isMovingToDoor = false;
+
+    [Header("Движение к двери")]
+    public float doorMoveSpeed = 10f; // скорость к двери
+
     void Start()
     {
-        // Проверяем существует ли ControlManager, если нет - создаём
-        if (ControlManager.Instance == null)
-        {
-            GameObject go = new GameObject("ControlManager");
-            go.AddComponent<ControlManager>();
-        }
-
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
         PlayerSpriteRenderer = GetComponent<SpriteRenderer>();
         Player = GetComponent<Animator>();
@@ -57,45 +56,23 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // ЕСЛИ ИГРА НА ПАУЗЕ - НИЧЕГО НЕ ДЕЛАЕМ
+        // Если игра на паузе - ничего не делаем
         if (PauseManager.isPaused)
         {
             return;
         }
 
-        float moveX = 0f;
-
-        // ============ ЧИТАЕМ НАЖАТИЯ КЛАВИШ (ВСЕГДА) ============
-        if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))
-            moveX = 1f;
-        else if (Input.GetKey("a") || Input.GetKey(KeyCode.LeftArrow))
-            moveX = -1f;
-
-        // ============ ДВИЖЕНИЕ ПО КЛАВИШАМ (только если выбран режим клавиатуры) ============
-        if (!ControlManager.Instance.useMouseMovement && moveX != 0)
+        // Движение к двери (приоритет)
+        if (isMovingToDoor && targetDoor != null)
         {
-            if (isMovingToClick)
-            {
-                isMovingToClick = false;
-                if (moveIndicator != null)
-                    moveIndicator.Hide();
-            }
-
-            Vector2 moveVector = new Vector2(moveX * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
-            PlayerRigidbody2D.linearVelocity = moveVector;
-            RotatePlayer(moveX < 0);
-
-            if (OnGround)
-                Player.SetBool("isWalking", true);
-
-            stuckTime = 0f;
-            lastPosition = transform.position;
+            MoveToDoorTarget();
+            return;
         }
 
-        // ============ ДВИЖЕНИЕ ПО КЛИКУ МЫШИ (только если выбран режим мыши) ============
-        if (ControlManager.Instance.useMouseMovement && Input.GetMouseButtonDown(0))
+        // Обработка клика мыши
+        if (Input.GetMouseButtonDown(0))
         {
-            // Проверяем клик по UI (кнопки, головоломки и т.д.)
+            // Проверяем клик по UI
             if (IsPointerOverUI())
             {
                 return;
@@ -121,96 +98,131 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Debug.Log("❌ Нельзя поставить стрелочку! На пути стена.");
-
-                
             }
         }
 
-        // ============ ДВИЖЕНИЕ К ТОЧКЕ КЛИКА (только для режима мыши) ============
-        if (ControlManager.Instance.useMouseMovement && isMovingToClick && moveX == 0)
+        // Движение к точке клика
+        if (isMovingToClick)
         {
-            float direction = 0f;
-
-            if (clickTarget.x > transform.position.x)
-                direction = 1f;
-            else if (clickTarget.x < transform.position.x)
-                direction = -1f;
-
-            if (direction != 0)
-            {
-                Vector2 moveVector = new Vector2(direction * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
-                PlayerRigidbody2D.linearVelocity = moveVector;
-                RotatePlayer(direction < 0);
-            }
-
-            if (OnGround)
-                Player.SetBool("isWalking", true);
-
-            // Проверка на застревание
-            float distanceMoved = Vector2.Distance(transform.position, lastPosition);
-
-            if (distanceMoved < 0.02f)
-            {
-                stuckTime += Time.deltaTime;
-                if (stuckTime > 0.5f)
-                {
-                    Debug.Log("⚠️ Персонаж застрял! Стрелочка исчезает.");
-                    StopMovingToClick();
-                    return;
-                }
-            }
-            else
-            {
-                stuckTime = 0f;
-            }
-
-            lastPosition = transform.position;
-
-            // Проверка достижения цели
-            if (Mathf.Abs(transform.position.x - clickTarget.x) < 0.1f)
-            {
-                Debug.Log("✅ Дошли до цели!");
-                StopMovingToClick();
-            }
+            MoveToClickTarget();
         }
-
-        // ============ ОСТАНОВКА АНИМАЦИИ ============
-        if (moveX == 0 && !isMovingToClick)
+        else if (!isMovingToDoor) // Если никуда не двигаемся - останавливаем анимацию
         {
             AnimationStop();
-            // Не обнуляем скорость в режиме мыши, чтобы не мешать физике
-            if (!ControlManager.Instance.useMouseMovement)
-            {
-                PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
-            }
         }
 
-        // ============ ОТМЕНА ДВИЖЕНИЯ ДЛЯ МЫШИ ============
-        if (ControlManager.Instance.useMouseMovement && Input.GetKeyDown(KeyCode.Escape))
+        // Отмена движения по ESC
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             StopMovingToClick();
         }
     }
 
+    void MoveToClickTarget()
+    {
+        float direction = 0f;
+
+        if (clickTarget.x > transform.position.x)
+            direction = 1f;
+        else if (clickTarget.x < transform.position.x)
+            direction = -1f;
+
+        if (direction != 0)
+        {
+            Vector2 moveVector = new Vector2(direction * MoveSpeed, PlayerRigidbody2D.linearVelocity.y);
+            PlayerRigidbody2D.linearVelocity = moveVector;
+            RotatePlayer(direction < 0);
+        }
+
+        if (OnGround)
+            Player.SetBool("isWalking", true);
+
+        // Проверка на застревание
+        float distanceMoved = Vector2.Distance(transform.position, lastPosition);
+
+        if (distanceMoved < 0.02f)
+        {
+            stuckTime += Time.deltaTime;
+            if (stuckTime > 0.5f)
+            {
+                Debug.Log("⚠️ Персонаж застрял! Стрелочка исчезает.");
+                StopMovingToClick();
+                return;
+            }
+        }
+        else
+        {
+            stuckTime = 0f;
+        }
+
+        lastPosition = transform.position;
+
+        // Проверка достижения цели
+        if (Mathf.Abs(transform.position.x - clickTarget.x) < 0.1f)
+        {
+            Debug.Log("✅ Дошли до цели!");
+            StopMovingToClick();
+        }
+    }
+
+    void MoveToDoorTarget()
+    {
+        Vector2 doorPos = targetDoor.transform.position;
+
+        // ВРЕМЕННО УВЕЛИЧИВАЕМ СКОРОСТЬ ПРЯМО ЗДЕСЬ
+        float currentSpeed = MoveSpeed;
+
+        // Двигаемся ТОЛЬКО по горизонтали
+        float step = currentSpeed * Time.deltaTime;
+        float newX = Mathf.MoveTowards(transform.position.x, doorPos.x, step);
+
+        // МЕНЯЕМ ПОЗИЦИЮ ЧЕРЕЗ velocity, НЕ MovePosition
+        Vector2 newVelocity = new Vector2(
+            (newX - transform.position.x) / Time.deltaTime,
+            PlayerRigidbody2D.linearVelocity.y
+        );
+        PlayerRigidbody2D.linearVelocity = newVelocity;
+
+        // Поворот в сторону двери
+        if (doorPos.x < transform.position.x)
+            RotatePlayer(true);
+        else if (doorPos.x > transform.position.x)
+            RotatePlayer(false);
+
+        // Анимация
+        if (OnGround)
+        {
+            Player.SetBool("isWalking", true);
+        }
+
+        // Проверка достижения двери
+        if (Mathf.Abs(transform.position.x - doorPos.x) < 0.2f)
+        {
+            isMovingToDoor = false;
+
+            if (OnGround)
+            {
+                Player.SetBool("isWalking", false);
+            }
+
+            PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+
+            if (targetDoor != null)
+            {
+                targetDoor.OnPlayerArrived();
+            }
+            targetDoor = null;
+        }
+
+        // ДЛЯ ОТЛАДКИ - посмотри в консоли реальную скорость
+        Debug.Log("Скорость к двери: " + Mathf.Abs(PlayerRigidbody2D.linearVelocity.x));
+    }
     bool IsPointerOverUI()
     {
-        // Проверка клика по UI
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             return true;
         }
-
-        // Опционально: проверка клика по объектам головоломок (раскомментируй если нужно)
-        /*
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-        
-        if (hit.collider != null && hit.collider.CompareTag("Puzzle"))
-        {
-            return true; // Не двигаемся, если кликнули по головоломке
-        }
-        */
-
         return false;
     }
 
@@ -263,6 +275,39 @@ public class PlayerController : MonoBehaviour
             moveIndicator.Hide();
     }
 
+    // Методы для двери
+    public void MoveToDoor(Door door)
+    {
+        // Останавливаем текущее движение
+        if (isMovingToClick)
+        {
+            StopMovingToClick();
+        }
+
+        // Останавливаем движение
+        PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+
+        // Прячем стрелочку
+        if (moveIndicator != null)
+        {
+            moveIndicator.Hide();
+        }
+
+        // Начинаем движение к двери
+        targetDoor = door;
+        isMovingToDoor = true;
+        Debug.Log("Идём к двери...");
+    }
+
+    public void StopMovingToDoor()
+    {
+        isMovingToDoor = false;
+        targetDoor = null;
+        if (OnGround)
+            Player.SetBool("isWalking", false);
+        PlayerRigidbody2D.linearVelocity = new Vector2(0, PlayerRigidbody2D.linearVelocity.y);
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
@@ -288,6 +333,12 @@ public class PlayerController : MonoBehaviour
             StopMovingToClick();
         }
 
+        // Останавливаем движение к двери
+        if (isMovingToDoor)
+        {
+            StopMovingToDoor();
+        }
+
         // Останавливаем физическое движение
         if (PlayerRigidbody2D != null)
         {
@@ -310,6 +361,22 @@ public class PlayerController : MonoBehaviour
         isMovingToClick = false;
         stuckTime = 0f;
 
-        Debug.Log("Движение остановлено при смене управления");
+        Debug.Log("Движение остановлено");
+    }
+
+    public void CancelMoveIndicator()
+    {
+        if (isMovingToClick)
+        {
+            StopMovingToClick();
+        }
+        if (moveIndicator != null)
+        {
+            moveIndicator.Hide();
+        }
+        isMovingToClick = false;
+        stuckTime = 0f;
+
+        Debug.Log("Стрелочка отменена");
     }
 }

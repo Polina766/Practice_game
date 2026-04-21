@@ -129,7 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c652883f26e2d4eabea86a6cf1c66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  CurrentAnimation: Idle Player
   OnGround: 0
   MoveSpeed: 3.5
   floorY: 1.2
@@ -137,7 +136,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
-  pauseManager: {fileID: 0}
+  doorMoveSpeed: 3.5
 --- !u!50 &8669154632640555134
 Rigidbody2D:
   serializedVersion: 5

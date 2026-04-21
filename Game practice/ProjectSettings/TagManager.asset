@@ -56,5 +56,8 @@ TagManager:
   - name: Door
     uniqueID: 902771029
     locked: 0
+  - name: arrow
+    uniqueID: 2493837657
+    locked: 0
   m_RenderingLayers:
   - Default

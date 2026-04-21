@@ -11,12 +11,13 @@ public class PauseManager : MonoBehaviour
     public Animator[] uiAnimators;
 
     [Header("Кнопки которые должны работать на паузе")]
-    public Button[] uiButtons; // Сюда перетащи кнопку Back Button
+    public Button[] uiButtons;
 
     public static bool isPaused = false;
 
     private Animator playerAnimator;
     private Rigidbody2D playerRigidbody;
+    private PlayerController playerController; // ДОБАВЛЯЕМ
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class PauseManager : MonoBehaviour
         {
             playerAnimator = player.GetComponent<Animator>();
             playerRigidbody = player.GetComponent<Rigidbody2D>();
+            playerController = player.GetComponent<PlayerController>(); // ДОБАВЛЯЕМ
         }
 
         if (settingsPanel != null)
@@ -35,7 +37,6 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        // Если игра на паузе - принудительно обновляем UI аниматоры
         if (isPaused && uiAnimators != null)
         {
             foreach (Animator anim in uiAnimators)
@@ -55,7 +56,6 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
 
-        // Останавливаем персонажа
         if (playerAnimator != null)
             playerAnimator.speed = 0f;
 
@@ -65,8 +65,7 @@ public class PauseManager : MonoBehaviour
             playerRigidbody.linearVelocity = Vector2.zero;
         }
 
-        // ВСЕ КНОПКИ продолжают работать на паузе
-        // Ничего с ними не делаем
+        // НЕ ОТКЛЮЧАЕМ PlayerController, просто останавливаем физику
 
         if (settingsPanel != null)
             settingsPanel.SetActive(true);
@@ -83,9 +82,15 @@ public class PauseManager : MonoBehaviour
             playerAnimator.speed = 1f;
 
         if (playerRigidbody != null)
+        {
             playerRigidbody.simulated = true;
+            // ПРИНУДИТЕЛЬНО ОБНОВЛЯЕМ
+            playerRigidbody.WakeUp();
+        }
 
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+
+        Debug.Log("Пауза снята, физика должна работать");
     }
 }

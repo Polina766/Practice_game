@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: fb78a6e2c757303469d017efdde4f1ca
+guid: d1a1b4a0475aba34cb29cccc20a9ca96
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8674010587887312518
-    second: ArrowDoor-export_0
+      213: 2755168697546733887
+    second: ArrowDoorLeft_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ArrowDoor-export_0
+      name: ArrowDoorLeft_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 9
+        y: 0
         width: 160
-        height: 142
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a71eff2c359bf9780800000000000000
-      internalID: -8674010587887312518
+      spriteID: f397c8935535c3620800000000000000
+      internalID: 2755168697546733887
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ArrowDoor-export_0: -8674010587887312518
+      ArrowDoorLeft_0: 2755168697546733887
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

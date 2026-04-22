@@ -6,9 +6,16 @@ public class Door : MonoBehaviour
     [Header("Какая сцена загрузится")]
     public string sceneToLoad = "SceneName";
 
+    [Header("ID этой двери (например: ToKitchen, ToHall)")]
+    public string doorID = "Door1";
+
     [Header("Настройки курсора")]
-    public Texture2D doorCursor;
+    public Texture2D doorCursorLeft;
+    public Texture2D doorCursorRight;
     public Vector2 cursorHotspot = new Vector2(16, 16);
+
+    [Header("Направление стрелки")]
+    public bool arrowPointLeft = true;
 
     private bool playerInRange = false;
     private PlayerController playerController;
@@ -19,13 +26,23 @@ public class Door : MonoBehaviour
     void Start()
     {
         defaultCursor = null;
+
+        if (GetComponent<Collider2D>() == null)
+        {
+            BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+            col.isTrigger = false;
+        }
     }
 
     void OnMouseEnter()
     {
-        if (doorCursor != null)
+        if (arrowPointLeft && doorCursorLeft != null)
         {
-            Cursor.SetCursor(doorCursor, cursorHotspot, cursorMode);
+            Cursor.SetCursor(doorCursorLeft, cursorHotspot, cursorMode);
+        }
+        else if (!arrowPointLeft && doorCursorRight != null)
+        {
+            Cursor.SetCursor(doorCursorRight, cursorHotspot, cursorMode);
         }
     }
 
@@ -40,7 +57,6 @@ public class Door : MonoBehaviour
         {
             playerInRange = true;
             playerController = other.GetComponent<PlayerController>();
-            Debug.Log("Игрок вошёл в зону двери");
         }
     }
 
@@ -50,7 +66,6 @@ public class Door : MonoBehaviour
         {
             playerInRange = false;
             playerController = null;
-            Debug.Log("Игрок вышел из зоны двери");
         }
     }
 
@@ -64,12 +79,21 @@ public class Door : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log("Клик по двери!");
-
         if (isLoading) return;
+
+        if (playerController == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerController = player.GetComponent<PlayerController>();
+            }
+        }
 
         if (playerController != null)
         {
+            playerController.CancelMoveIndicator();
+
             if (playerInRange)
             {
                 LoadScene();
@@ -79,28 +103,6 @@ public class Door : MonoBehaviour
                 playerController.MoveToDoor(this);
             }
         }
-        else
-        {
-            // Если игрок далеко - всё равно идём к двери
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                playerController = player.GetComponent<PlayerController>();
-                if (playerController != null)
-                {
-                    playerController.MoveToDoor(this);
-                }
-            }
-        }
-    }
-
-    public void OnPlayerArrived()
-    {
-        if (!isLoading)
-        {
-            Debug.Log("Игрок подошёл к двери!");
-            LoadScene();
-        }
     }
 
     void LoadScene()
@@ -108,8 +110,24 @@ public class Door : MonoBehaviour
         if (isLoading) return;
         isLoading = true;
 
+        // СОХРАНЯЕМ ПОЗИЦИЮ ТЕКУЩЕЙ ДВЕРИ
+        string currentScene = SceneManager.GetActiveScene().name;
+        string saveKey = currentScene + "_" + doorID;
+
+        SceneTransfer.doorPositions[saveKey] = transform.position;
+
+        Debug.Log($"Сохранено: {saveKey} = {transform.position}");
+
         Cursor.SetCursor(defaultCursor, Vector2.zero, cursorMode);
         SceneManager.LoadScene(sceneToLoad);
+    }
+
+    public void OnPlayerArrived()
+    {
+        if (!isLoading)
+        {
+            LoadScene();
+        }
     }
 
     void OnDestroy()

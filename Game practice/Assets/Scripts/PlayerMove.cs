@@ -223,6 +223,16 @@ public class PlayerController : MonoBehaviour
         {
             return true;
         }
+
+        // ЭТОТ БЛОК ДОЛЖЕН БЫТЬ!
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
+        if (hit.collider != null && hit.collider.GetComponent<Door>() != null)
+        {
+            return true; // Не ставим стрелочку при клике на дверь
+        }
+
         return false;
     }
 

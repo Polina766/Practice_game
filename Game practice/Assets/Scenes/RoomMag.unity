@@ -261,7 +261,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.1286898, y: 4.2496133, z: -10}
+  m_LocalPosition: {x: -10.046818, y: 4.507381, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -503,7 +503,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8921796083297982417, guid: be95ee7d609850642a45371f84becf21, type: 3}
+  m_Sprite: {fileID: -4891307709505435862, guid: f6d78929ce83fbf4b9e32a59ad4d8e2c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -522,7 +522,7 @@ Transform:
   m_GameObject: {fileID: 1472987084}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.21, y: 4.25, z: 0}
+  m_LocalPosition: {x: -12.42, y: 0.4, z: 0}
   m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1004,7 +1004,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.40214038, y: 1.4734277}
+  m_Offset: {x: -4.1273093, y: 1.5593503}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1014,7 +1014,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 6.913779, y: 3.1471102}
+  m_Size: {x: 6.971055, y: 3.0621471}
   m_EdgeRadius: 0
 --- !u!1001 &1487864549572411434
 PrefabInstance:
@@ -1204,7 +1204,7 @@ Transform:
   m_GameObject: {fileID: 740721461341299276}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.58, y: -1.04, z: 0}
+  m_LocalPosition: {x: -15.41, y: -1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1402,7 +1402,7 @@ Transform:
   m_GameObject: {fileID: 6731594657176395540}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.85, y: 3.32, z: 0}
+  m_LocalPosition: {x: -21.21, y: 3.78, z: 0}
   m_LocalScale: {x: 4.4077396, y: 4.5810046, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1757,8 +1757,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ebc7bd82ba6eb43a6921b324d23d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  sceneToLoad: Room girl
-  doorID: ToRoomGirl
+  sceneToLoad: Coridor
+  doorID: ToCoridor
   doorCursorLeft: {fileID: 2800000, guid: d1a1b4a0475aba34cb29cccc20a9ca96, type: 3}
   doorCursorRight: {fileID: 2800000, guid: bf7b96e092a414f47a3f50b9eea273ca, type: 3}
   cursorHotspot: {x: 16, y: 16}
@@ -1945,7 +1945,7 @@ Transform:
   m_GameObject: {fileID: 809512885290411139}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.11, y: 3.32, z: 0}
+  m_LocalPosition: {x: -3.68, y: 3.16, z: 0}
   m_LocalScale: {x: 4.4077396, y: 4.5810046, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []

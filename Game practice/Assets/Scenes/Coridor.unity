@@ -1403,8 +1403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ebc7bd82ba6eb43a6921b324d23d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  sceneToLoad: Hall
-  doorID: 
+  sceneToLoad: RoomMag
+  doorID: ToRoomMag
   doorCursorLeft: {fileID: 2800000, guid: d1a1b4a0475aba34cb29cccc20a9ca96, type: 3}
   doorCursorRight: {fileID: 2800000, guid: bf7b96e092a414f47a3f50b9eea273ca, type: 3}
   cursorHotspot: {x: 16, y: 16}

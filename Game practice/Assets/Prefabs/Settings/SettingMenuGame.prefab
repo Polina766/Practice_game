@@ -581,6 +581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4436858717459029333}
   - component: {fileID: 259805598681096149}
+  - component: {fileID: 662865208498737566}
   m_Layer: 5
   m_Name: VolumeControl
   m_TagString: Untagged
@@ -631,6 +632,20 @@ MonoBehaviour:
   soundKeyPurple: {fileID: 21300000, guid: 65e082703c8054b4587dd6e7580695a4, type: 3}
   musicKeyBrown: {fileID: 21300000, guid: c87fbad50f6953e4584cdcf4e7e3cfc0, type: 3}
   musicKeyPurple: {fileID: 21300000, guid: 0c18a35296b13b64b8316094537fc729, type: 3}
+--- !u!114 &662865208498737566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2853883905479336829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c282596972deab4795f5b9864c7b7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VolumeSlider
+  musicSlider: {fileID: 9188972045619657977}
+  sfxSlider: {fileID: 4123699514236227272}
 --- !u!1 &3189937790286148069
 GameObject:
   m_ObjectHideFlags: 0

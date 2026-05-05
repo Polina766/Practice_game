@@ -551,6 +551,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8819fe426a033144ab19dc9f1402848f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveIndicator
+--- !u!1001 &1324487891
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2357581008668221723, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: cf118b2d8813f2f40b77d1ef00efc18d, type: 3}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1146
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 660.40247
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262029201075155697, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: gameplayMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: cf118b2d8813f2f40b77d1ef00efc18d, type: 3}
+    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: 'gameplayScenes.Array.data[2]'
+      value: Room girl
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
 --- !u!1 &1472987084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1583,7 +1652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
       propertyPath: floorY
-      value: 1.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
       propertyPath: moveIndicator
@@ -1643,7 +1712,7 @@ Transform:
   m_GameObject: {fileID: 6731594657176395540}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.02, y: 4.03, z: 0}
+  m_LocalPosition: {x: -6.86, y: 3.64, z: 0}
   m_LocalScale: {x: 4.4077396, y: 4.5810046, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2265,3 +2334,4 @@ SceneRoots:
   - {fileID: 1930742862}
   - {fileID: 1922885357}
   - {fileID: 28288037}
+  - {fileID: 1324487891}

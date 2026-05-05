@@ -1,29 +1,23 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance { get; private set; }
+    public static AudioManager Instance;
 
-    // Текущие источники звука (будут меняться при загрузке сцены)
-    private AudioSource currentMusicSource;
-    private AudioSource currentSFXSource;
+    [Header("Audio Sources")]
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
 
-    // Хранимые значения громкости
     private float musicVolume = 0.75f;
     private float sfxVolume = 0.75f;
 
-    // Ключи для сохранения
-    private const string MUSIC_VOL_KEY = "MusicVolume";
-    private const string SFX_VOL_KEY = "SFXVolume";
+    private const string MUSIC_KEY = "MusicVolume";
+    private const string SFX_KEY = "SFXVolume";
 
-    // События для уведомления ползунков об изменении громкости
-    public System.Action<float> OnMusicVolumeChanged;
-    public System.Action<float> OnSFXVolumeChanged;
+    
 
     private void Awake()
     {
-        // Синглтон — объект живёт один между всеми сценами
         if (Instance == null)
         {
             Instance = this;
@@ -35,68 +29,88 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Загружаем сохранённую громкость
-        musicVolume = PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 0.75f);
-        sfxVolume = PlayerPrefs.GetFloat(SFX_VOL_KEY, 0.75f);
+        musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 0.75f);
+        sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 0.75f);
     }
 
-    // ЭТОТ МЕТОД ВЫЗЫВАЕТСЯ В КАЖДОЙ СЦЕНЕ ДЛЯ ПОДКЛЮЧЕНИЯ МУЗЫКИ И ЗВУКОВ
-    public void RegisterAudioSources(AudioSource musicSource, AudioSource sfxSource)
+    private void Start()
     {
-        currentMusicSource = musicSource;
-        currentSFXSource = sfxSource;
-
-        // Применяем сохранённую громкость к новым источникам
-        if (currentMusicSource != null)
-            currentMusicSource.volume = musicVolume;
-
-        if (currentSFXSource != null)
-            currentSFXSource.volume = sfxVolume;
+        if (musicSource != null) musicSource.volume = musicVolume;
+        if (sfxSource != null) sfxSource.volume = sfxVolume;
     }
 
-    // Установка громкости музыки (вызывается из ползунков)
     public void SetMusicVolume(float volume)
     {
-        musicVolume = Mathf.Clamp01(volume);
-        PlayerPrefs.SetFloat(MUSIC_VOL_KEY, musicVolume);
-
-        if (currentMusicSource != null)
-            currentMusicSource.volume = musicVolume;
-
-        OnMusicVolumeChanged?.Invoke(musicVolume);
+        musicVolume = volume;
+        PlayerPrefs.SetFloat(MUSIC_KEY, musicVolume);
+        if (musicSource != null) musicSource.volume = musicVolume;
     }
 
-    // Установка громкости звуков
     public void SetSFXVolume(float volume)
     {
-        sfxVolume = Mathf.Clamp01(volume);
-        PlayerPrefs.SetFloat(SFX_VOL_KEY, sfxVolume);
-
-        if (currentSFXSource != null)
-            currentSFXSource.volume = sfxVolume;
-
-        OnSFXVolumeChanged?.Invoke(sfxVolume);
+        sfxVolume = volume;
+        PlayerPrefs.SetFloat(SFX_KEY, sfxVolume);
+        if (sfxSource != null) sfxSource.volume = sfxVolume;
     }
 
-    // Получить текущую громкость (для инициализации ползунков)
     public float GetMusicVolume() => musicVolume;
     public float GetSFXVolume() => sfxVolume;
 
-    // Проигрывание звука (можно вызывать из любой сцены)
+    // НОВЫЙ МЕТОД для управления музыкой
+    public void PlayMusic(AudioClip clip, bool restartIfSame = false)
+    {
+        if (clip == null || musicSource == null) return;
+
+        // Если эта же музыка уже играет - ничего не делаем (не перезапускаем)
+        if (musicSource.clip == clip && musicSource.isPlaying && !restartIfSame)
+        {
+            Debug.Log($"Музыка '{clip.name}' уже играет, не перезапускаем");
+            return;
+        }
+
+        // Меняем музыку
+        musicSource.clip = clip;
+        musicSource.loop = true;
+        musicSource.Play();
+        Debug.Log($"Запущена музыка: {clip.name}");
+    }
+
     public void PlaySFX(AudioClip clip, float volumeScale = 1f)
     {
-        if (clip != null && currentSFXSource != null)
+        if (clip != null && sfxSource != null)
         {
-            currentSFXSource.PlayOneShot(clip, volumeScale);
+            sfxSource.PlayOneShot(clip, volumeScale);
         }
     }
 
-    // Проигрывание звука в точке в мире
-    public void PlaySFXAtPoint(AudioClip clip, Vector3 position, float volumeScale = 1f)
+    public float GetMusicTime() => musicSource.time;
+    public void SetMusicTime(float time) => musicSource.time = time;
+
+
+    private float savedMusicTime = 0f;
+
+    public void PauseMusic()
     {
-        if (clip != null)
+        if (musicSource.isPlaying)
         {
-            AudioSource.PlayClipAtPoint(clip, position, volumeScale * sfxVolume);
+            savedMusicTime = musicSource.time;
+            musicSource.Pause();
         }
+    }
+
+    public void ResumeMusic()
+    {
+        musicSource.time = savedMusicTime;
+        musicSource.Play();
+    }
+
+    public void PlayMusicWithSave(AudioClip clip)
+    {
+        if (musicSource.clip == clip && musicSource.isPlaying)
+            return;
+
+        musicSource.clip = clip;
+        musicSource.time = savedMusicTime;
+        musicSource.Play();
     }
 }

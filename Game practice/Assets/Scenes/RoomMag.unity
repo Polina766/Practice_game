@@ -1459,6 +1459,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+      propertyPath: floorY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
       propertyPath: moveIndicator
       value: 
       objectReference: {fileID: 1049748903}

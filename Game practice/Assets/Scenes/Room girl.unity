@@ -134,7 +134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &14634870
 RectTransform:
   m_ObjectHideFlags: 0
@@ -546,7 +546,7 @@ MonoBehaviour:
   - {fileID: 533499470}
   - {fileID: 1860767720}
   - {fileID: 1624093910}
-  initialSlotMapping: 02000000000000000300000001000000
+  initialSlotMapping: 01000000020000000000000003000000
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneMusicManager
   mainMenuMusic: {fileID: 8300000, guid: 706d76d3b71ee1149861600778f32af3, type: 3}
-  gameplayMusic: {fileID: 8300000, guid: b11b2b05136bd954397562ef0c157b14, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: cf118b2d8813f2f40b77d1ef00efc18d, type: 3}
   gameplayScenes:
   - Hall
   - Kitchen

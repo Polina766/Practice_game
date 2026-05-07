@@ -248,7 +248,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &347945813
 RectTransform:
   m_ObjectHideFlags: 0
@@ -746,10 +746,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2357581008668221723, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
-      propertyPath: m_Resource
-      value: 
-      objectReference: {fileID: 8300000, guid: cf118b2d8813f2f40b77d1ef00efc18d, type: 3}
     - target: {fileID: 6837744208487410195, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1146
@@ -793,14 +789,6 @@ PrefabInstance:
     - target: {fileID: 8262029201075155697, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
       propertyPath: m_Name
       value: AudioManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
-      propertyPath: gameplayMusic
-      value: 
-      objectReference: {fileID: 8300000, guid: cf118b2d8813f2f40b77d1ef00efc18d, type: 3}
-    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
-      propertyPath: 'gameplayScenes.Array.data[2]'
-      value: Room girl
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

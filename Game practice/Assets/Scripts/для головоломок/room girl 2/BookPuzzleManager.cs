@@ -4,90 +4,125 @@ using System.Collections.Generic;
 public class BookPuzzleManager : MonoBehaviour
 {
     public BookSlot[] slots;
-    public Transform booksPanel;
-    public GameObject closeButton;  // 👈 Кнопка крестика (перетащи сюда)
+    public GameObject closeButton;
+    public DraggableBook[] books;
 
-    private bool gameWon = false;
+    // ВРУЧНУЮ НАЗНАЧАЕМ, какая книга в каком слоте изначально
+    public int[] initialSlotMapping; // Например: [2, 0, 3, 1] значит книга 2 в слоте 0, книга 0 в слоте 1 и т.д.
+
+    private Dictionary<DraggableBook, Vector2> bookPositions;
+    private Dictionary<BookSlot, DraggableBook> slotContents;
+    private bool won = false;
 
     void Start()
     {
-        ShuffleBooks();
-
-        // Скрываем кнопку в начале
         if (closeButton != null)
             closeButton.SetActive(false);
-    }
 
-    void ShuffleBooks()
-    {
-        List<DraggableBook> books = new List<DraggableBook>();
+        bookPositions = new Dictionary<DraggableBook, Vector2>();
+        slotContents = new Dictionary<BookSlot, DraggableBook>();
 
-        foreach (Transform child in booksPanel)
+        // Запоминаем позиции всех книг
+        foreach (DraggableBook book in books)
         {
-            DraggableBook book = child.GetComponent<DraggableBook>();
-            if (book != null)
-            {
-                books.Add(book);
-            }
+            bookPositions[book] = book.GetComponent<RectTransform>().anchoredPosition;
         }
 
-        // Перемешиваем
-        for (int i = 0; i < books.Count; i++)
-        {
-            DraggableBook temp = books[i];
-            int randomIndex = Random.Range(i, books.Count);
-            books[i] = books[randomIndex];
-            books[randomIndex] = temp;
-        }
-
-        // Расставляем
-        for (int i = 0; i < books.Count; i++)
-        {
-            books[i].transform.SetParent(booksPanel);
-            books[i].transform.SetSiblingIndex(i);
-            books[i].transform.localPosition = Vector3.zero;
-        }
-    }
-
-    public void CheckWin()
-    {
-        if (gameWon) return;
-
-        // Проверяем все ли слоты заняты
+        // Очищаем слоты
         foreach (BookSlot slot in slots)
         {
-            if (slot.GetCurrentBook() == null)
-                return;
+            slotContents[slot] = null;
         }
 
-        // Проверяем правильность
-        bool allCorrect = true;
-        for (int i = 0; i < slots.Length; i++)
+        // НАЗНАЧАЕМ КНИГИ В СЛОТЫ ВРУЧНУЮ
+        for (int i = 0; i < slots.Length && i < initialSlotMapping.Length; i++)
         {
-            if (!slots[i].IsCorrect())
+            int bookIndex = initialSlotMapping[i];
+            if (bookIndex >= 0 && bookIndex < books.Length)
             {
-                allCorrect = false;
+                slotContents[slots[i]] = books[bookIndex];
+                // Ставим книгу на позицию слота
+                books[bookIndex].SetPosition(slots[i].slotRect.anchoredPosition);
+                bookPositions[books[bookIndex]] = slots[i].slotRect.anchoredPosition;
+                Debug.Log($"Слот {slots[i].name} (индекс {slots[i].requiredBookIndex}) содержит книгу {books[bookIndex].name} (индекс {books[bookIndex].bookIndex})");
+            }
+        }
+    }
+
+    public static void SwapBooks(DraggableBook draggedBook, BookSlot targetSlot)
+    {
+        BookPuzzleManager manager = FindFirstObjectByType<BookPuzzleManager>();
+        manager.SwapBooksInternal(draggedBook, targetSlot);
+    }
+
+    private void SwapBooksInternal(DraggableBook draggedBook, BookSlot targetSlot)
+    {
+        // Находим слот, в котором сейчас стоит перетаскиваемая книга
+        BookSlot sourceSlot = null;
+        foreach (var kvp in slotContents)
+        {
+            if (kvp.Value == draggedBook)
+            {
+                sourceSlot = kvp.Key;
                 break;
             }
         }
 
-        if (allCorrect)
-        {
-            gameWon = true;
-            Debug.Log("ПОБЕДА! Показываем кнопку крестика...");
+        // Книга, которая стоит в целевом слоте
+        DraggableBook targetBook = slotContents[targetSlot];
 
-            // ПОКАЗЫВАЕМ КНОПКУ КРЕСТИКА
-            if (closeButton != null)
-                closeButton.SetActive(true);
+        // Позиция целевого слота
+        Vector2 targetSlotPos = targetSlot.slotRect.anchoredPosition;
+
+        Debug.Log($"Перетаскиваем {draggedBook.name} из слота {sourceSlot?.name ?? "ниоткуда"} в слот {targetSlot.name}, там книга {targetBook?.name ?? "пусто"}");
+
+        if (sourceSlot != null)
+        {
+            // Книга была в слоте
+            if (targetBook != null)
+            {
+                // МЕНЯЕМ КНИГИ МЕСТАМИ
+                targetBook.SetPosition(bookPositions[draggedBook]);
+                bookPositions[targetBook] = bookPositions[draggedBook];
+                slotContents[sourceSlot] = targetBook;
+                Debug.Log($"{targetBook.name} перемещена в слот {sourceSlot.name}");
+            }
+            else
+            {
+                // Целевой слот пуст
+                slotContents[sourceSlot] = null;
+            }
         }
+
+        // Перетаскиваемая книга летит в целевой слот
+        draggedBook.SetPosition(targetSlotPos);
+        bookPositions[draggedBook] = targetSlotPos;
+        slotContents[targetSlot] = draggedBook;
+
+        Debug.Log($"{draggedBook.name} перемещена в слот {targetSlot.name}");
+
+        CheckWin();
     }
 
-    // Этот метод повесишь на кнопку крестика
+    private void CheckWin()
+    {
+        if (won) return;
+
+        foreach (BookSlot slot in slots)
+        {
+            DraggableBook book = slotContents[slot];
+            if (book == null) return;
+            if (book.bookIndex != slot.requiredBookIndex) return;
+        }
+
+        won = true;
+        Debug.Log("ПОБЕДА!");
+        if (closeButton != null)
+            closeButton.SetActive(true);
+    }
+
     public void ClosePuzzle()
     {
-        // Скрываем всю головоломку
-        transform.parent.gameObject.SetActive(false); // Если менеджер внутри PuzzleGame
-        // Или если кнопка отдельно: gameObject.SetActive(false);
-        Debug.Log("Головоломка закрыта");
+        transform.parent.gameObject.SetActive(false);
     }
 }

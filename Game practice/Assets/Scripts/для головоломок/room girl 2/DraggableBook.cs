@@ -5,32 +5,30 @@ public class DraggableBook : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 {
     public int bookIndex;
 
-    private Vector2 startPosition;
-    private Transform startParent;
     private CanvasGroup canvasGroup;
-    private Canvas mainCanvas;
+    private Vector2 startPosition;
+    private Canvas canvas;
+    private RectTransform rectTransform;
 
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
-        mainCanvas = GetComponentInParent<Canvas>();
+        canvas = GetComponentInParent<Canvas>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        startPosition = transform.position;
-        startParent = transform.parent;
+        startPosition = rectTransform.anchoredPosition;
         canvasGroup.blocksRaycasts = false;
-        transform.SetParent(mainCanvas.transform);
-        canvasGroup.alpha = 0.8f;
+        canvasGroup.alpha = 0.7f;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = eventData.position;
+        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -38,17 +36,24 @@ public class DraggableBook : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
-        // Если книга не попала в слот - возвращаем
-        if (transform.parent == mainCanvas.transform)
+        var results = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var hit in results)
         {
-            ReturnToStart();
+            BookSlot slot = hit.gameObject.GetComponent<BookSlot>();
+            if (slot != null)
+            {
+                BookPuzzleManager.SwapBooks(this, slot);
+                return;
+            }
         }
+
+        rectTransform.anchoredPosition = startPosition;
     }
 
-    public void ReturnToStart()
+    public void SetPosition(Vector2 position)
     {
-        transform.SetParent(startParent);
-        transform.position = startPosition;
-        transform.localPosition = Vector3.zero;
+        rectTransform.anchoredPosition = position;
     }
 }

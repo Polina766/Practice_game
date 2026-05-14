@@ -424,10 +424,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 5
-      y: 80
-      width: 169
-      height: 23
+      x: 8
+      y: 81
+      width: 166
+      height: 19
     spriteID: 936d3d408f1d86f46b86b9cbc1cc34fd
     spriteBone: []
     spriteOutline: []
@@ -445,10 +445,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 6
-      y: 58
-      width: 32
-      height: 17
+      x: 7
+      y: 59
+      width: 30
+      height: 14
     spriteID: 824178f552b3fbc4a9685e4db6d07cc6
     spriteBone: []
     spriteOutline: []
@@ -466,10 +466,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 50
-      y: 57
-      width: 85
-      height: 18
+      x: 51
+      y: 59
+      width: 82
+      height: 14
     spriteID: 5ebf4a8f1eb91384c9f66c5d1160b3b4
     spriteBone: []
     spriteOutline: []
@@ -487,10 +487,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 145
-      y: 58
-      width: 29
-      height: 16
+      x: 147
+      y: 59
+      width: 26
+      height: 14
     spriteID: 29558df52c0432b4e8e251716b6fbea3
     spriteBone: []
     spriteOutline: []
@@ -508,10 +508,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 151
-      y: 32
-      width: 21
-      height: 23
+      x: 152
+      y: 34
+      width: 19
+      height: 19
     spriteID: 33fd04b7db797bc4bbc52bf14c86bdb6
     spriteBone: []
     spriteOutline: []
@@ -529,10 +529,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 67
-      y: 33
-      width: 47
-      height: 22
+      x: 69
+      y: 35
+      width: 44
+      height: 19
     spriteID: b1c85c5e1fb68d94d9d21990c0d1d1ea
     spriteBone: []
     spriteOutline: []
@@ -571,10 +571,10 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 2
-      y: 3
-      width: 20
-      height: 19
+      x: 4
+      y: 4
+      width: 16
+      height: 16
     spriteID: 274641dbe3f318b49bb2652ab6818d0c
     spriteBone: []
     spriteOutline: []

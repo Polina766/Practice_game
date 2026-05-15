@@ -246,9 +246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c74fe3cbda74b468a3a2fe4e61567a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleOpener
-  puzzle: {fileID: 0}
-  openKey: 101
-  playerNear: 0
 --- !u!1 &122588681
 GameObject:
   m_ObjectHideFlags: 0

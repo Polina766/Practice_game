@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3f6503353fbdc9546934bd2d5cf4e50a
+guid: a40ca80820013e341895c1a00c519a8e
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -103,10 +103,10 @@ TextureImporter:
       name: Puzzles_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 19
-        width: 1322
-        height: 1162
+        x: 0
+        y: 0
+        width: 34
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

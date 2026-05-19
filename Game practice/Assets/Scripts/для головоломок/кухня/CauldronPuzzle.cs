@@ -13,10 +13,8 @@ public class CauldronPuzzle : MonoBehaviour
     [Header("Какие слоты правильные (индексы 0..8)")]
     public int[] correctSlots = { 0, 2, 5, 7 };  // пример: 4 правильных слота
 
-    [Header("Анимация и UI")]
-    public Animator cauldronAnimator;  // твой котел с анимацией
+    [Header("UI")]
     public Button closeButton;         // кнопка крестика
-    public string winTriggerName = "Brew";  // имя триггера анимации
 
     [Header("Панель головоломки")]
     public GameObject puzzlePanel;  // ВСЯ панель головоломки (родитель всех слотов)
@@ -35,6 +33,7 @@ public class CauldronPuzzle : MonoBehaviour
     private List<int> selectedIndices = new List<int>();
     private Dictionary<int, Vector3> originalScales = new Dictionary<int, Vector3>();
     private bool isPuzzleActive = false;  // активна ли головоломка
+    private bool puzzleCompleted = false; // решена ли головоломка
     private bool playerInRange = false;   // игрок в зоне триггера
     private Animator playerAnimator;
     private Rigidbody2D playerRigidbody;
@@ -78,7 +77,7 @@ public class CauldronPuzzle : MonoBehaviour
     void Update()
     {
         // Проверяем активацию по правой кнопке мыши
-        if (activateOnRightClick && !isPuzzleActive && playerInRange)
+        if (activateOnRightClick && !isPuzzleActive && playerInRange && !puzzleCompleted)
         {
             if (Input.GetMouseButtonDown(1)) // 1 - правая кнопка
             {
@@ -113,7 +112,7 @@ public class CauldronPuzzle : MonoBehaviour
             Debug.Log("Игрок подошел к котлу. Можно открыть головоломку!");
 
             // Если активация при приближении включена
-            if (activateOnApproach)
+            if (activateOnApproach && !puzzleCompleted)
             {
                 OpenPuzzle();
             }
@@ -138,7 +137,7 @@ public class CauldronPuzzle : MonoBehaviour
     // Метод для открытия головоломки
     public void OpenPuzzle()
     {
-        if (isPuzzleActive) return;
+        if (isPuzzleActive || puzzleCompleted) return;
 
         // Показываем панель головоломки
         if (puzzlePanel != null)
@@ -228,7 +227,7 @@ public class CauldronPuzzle : MonoBehaviour
     void OnSlotClicked(int slotIndex)
     {
         // Если головоломка не активна или уже победили — запрещаем
-        if (!isPuzzleActive || (closeButton != null && closeButton.gameObject.activeSelf))
+        if (!isPuzzleActive || puzzleCompleted)
             return;
 
         // Если этот слот уже выбран — игнорируем
@@ -264,11 +263,8 @@ public class CauldronPuzzle : MonoBehaviour
         if (allCorrect && selectedIndices.Count == correctSlots.Length)
         {
             // ПОБЕДА!
-            Debug.Log("Зелье готово!");
-
-            // Запускаем анимацию котла (используем реальное время)
-            if (cauldronAnimator != null)
-                cauldronAnimator.SetTrigger(winTriggerName);
+            Debug.Log("Зелье готово! 🧪");
+            puzzleCompleted = true;
 
             // Показываем крестик
             if (closeButton != null)
@@ -305,10 +301,6 @@ public class CauldronPuzzle : MonoBehaviour
 
         if (closeButton != null)
             closeButton.gameObject.SetActive(false);
-
-        // Останавливаем анимацию котла
-        if (cauldronAnimator != null)
-            cauldronAnimator.Rebind();
     }
 
     void OnDestroy()

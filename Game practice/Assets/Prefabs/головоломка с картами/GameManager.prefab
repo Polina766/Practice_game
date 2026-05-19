@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2124153021568111246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1040859460552892459}
+  - component: {fileID: 7953507516173946898}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1040859460552892459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124153021568111246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1020.8132, y: 409.43875, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7953507516173946898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124153021568111246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757115275856f1e44b242dc532ce14b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManagerCard
+  cardPrefab: {fileID: 9142320579289678811, guid: cc5af823191114f42b00ac2f86bd30f1, type: 3}
+  cardBack: {fileID: -3087192947513255298, guid: 12920bb0d5bcc1a4bac05cdebde2a20e, type: 3}
+  cardFaces:
+  - {fileID: 5883309042067710877, guid: 2866453f8a1c0574192aa604d2a204e8, type: 3}
+  - {fileID: -2618882609815347666, guid: 7fc1b8d903dd8ea4ba4ff6a4f0f6e08b, type: 3}
+  - {fileID: 4853729095905041235, guid: 241cb342828d0ca4a859bdac9ca59598, type: 3}
+  - {fileID: -483074633062376593, guid: 2320ffaac5e5b6e46a87d54d6b5eac0d, type: 3}
+  - {fileID: -7677201137084820641, guid: bbc781e4f0d7179488167ef87e6924dd, type: 3}
+  - {fileID: -4298334213542707184, guid: 3f753315b8099574aa8e2a86319a3066, type: 3}
+  - {fileID: -4064027434960221334, guid: 893e675036b03b24db347b9ec7e79d90, type: 3}
+  - {fileID: 2679122038079438134, guid: d61c47b76696eab4fbba58a89d892879, type: 3}
+  - {fileID: 4897765894853169746, guid: cb9cd7388d5ebf7478050a5d216fe02e, type: 3}
+  - {fileID: 3882318660075994833, guid: ae9b3178993320d48bf098453ee62e05, type: 3}
+  - {fileID: 1800847270410954047, guid: b62d12516bcd33048874cae2b695913a, type: 3}
+  - {fileID: 2692343091053898530, guid: 9fcb3192bc411cb45b8f85a18e65b6f6, type: 3}
+  firstCard: {fileID: 0}
+  secondCard: {fileID: 0}
+  cardHolder: {fileID: 0}
+  finalUI: {fileID: 0}
+  finalText: {fileID: 0}
+  timerText: {fileID: 0}
+  maxTime: 35

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManagerCard : MonoBehaviour
 {
@@ -17,8 +18,6 @@ public class GameManagerCard : MonoBehaviour
     public Card firstCard, secondCard;
 
     public Transform cardHolder;
-    public GameObject finalUI;
-    public TextMeshProUGUI finalText;
     public TextMeshProUGUI timerText;
 
     private int pairsMatched;
@@ -29,10 +28,15 @@ public class GameManagerCard : MonoBehaviour
 
     public float maxTime = 60f;
 
+    public Button closeButton;
+    public GameObject losePanel;
+    public string sceneToReturnTo = "KitchenScene";
+
     private void Awake()
     {
         Instance = this;
     }
+
     void Start()
     {
         cards = new List<Card>();
@@ -47,17 +51,35 @@ public class GameManagerCard : MonoBehaviour
         CreateCards();
         ShuffleCards();
 
-        finalUI.gameObject.SetActive(false);
+        if (timerText != null)
+            timerText.text = "Time Left: " + Mathf.Round(timer) + "s";
+
+        if (losePanel != null)
+            losePanel.SetActive(false);
+
+        if (closeButton != null)
+        {
+            closeButton.onClick.AddListener(ClosePuzzle);
+            closeButton.gameObject.SetActive(false);
+        }
+
+        if (losePanel != null)
+        {
+            Button restartButton = losePanel.GetComponentInChildren<Button>();
+            if (restartButton != null)
+                restartButton.onClick.AddListener(RestartGame);
+        }
     }
 
     void Update()
     {
-        if(!isGameOver && !isLevelFinished)
+        if (!isGameOver && !isLevelFinished)
         {
-            if(timer > 0)
+            if (timer > 0)
             {
                 timer -= Time.deltaTime;
-                UpdateTimerText();
+                if (timerText != null)
+                    timerText.text = "Time Left: " + Mathf.Round(timer) + "s";
             }
             else
             {
@@ -95,17 +117,17 @@ public class GameManagerCard : MonoBehaviour
 
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].cardID = cardIDs[i]; 
+            cards[i].cardID = cardIDs[i];
         }
     }
 
     public void CardFlipped(Card flippedCard)
     {
-        if(firstCard == null)
+        if (firstCard == null)
         {
             firstCard = flippedCard;
         }
-        else if(secondCard == null)
+        else if (secondCard == null)
         {
             secondCard = flippedCard;
             CheckMatch();
@@ -118,7 +140,7 @@ public class GameManagerCard : MonoBehaviour
         {
             pairsMatched++;
 
-            if(pairsMatched == totalPairs)
+            if (pairsMatched == totalPairs)
             {
                 LevelFinished();
             }
@@ -144,26 +166,19 @@ public class GameManagerCard : MonoBehaviour
     void GameOver()
     {
         isGameOver = true;
-        FinalPanel();
+        if (losePanel != null)
+            losePanel.SetActive(true);
     }
 
     public void LevelFinished()
     {
         isLevelFinished = true;
-        FinalPanel();
-    }
 
-    public void FinalPanel()
-    {
-        finalUI.gameObject.SetActive(true);
-        if (isLevelFinished)
-        {
-            finalText.text = "Level Finished! Time Taken: " + Mathf.Round(timer) + "s";
-        }
-        else if(isGameOver)
-        {
-            finalText.text = "Game Over! Time's Up!";
-        }
+        // ОТМЕЧАЕМ, ЧТО ГОЛОВОЛОМКА ПРОЙДЕНА
+        PuzzleTransition.CompletePuzzle();
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(true);
     }
 
     public void RestartGame()
@@ -172,9 +187,16 @@ public class GameManagerCard : MonoBehaviour
         timer = maxTime;
         isGameOver = false;
         isLevelFinished = false;
-        finalUI.gameObject.SetActive(false);
 
-        foreach(var card in cards)
+        if (losePanel != null)
+            losePanel.SetActive(false);
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+
+        if (timerText != null)
+            timerText.text = "Time Left: " + Mathf.Round(timer) + "s";
+
+        foreach (var card in cards)
         {
             Destroy(card.gameObject);
         }
@@ -185,8 +207,8 @@ public class GameManagerCard : MonoBehaviour
         ShuffleCards();
     }
 
-    void UpdateTimerText()
+    public void ClosePuzzle()
     {
-        timerText.text = "Time Left:" + Mathf.Round(timer) + "s";
+        SceneManager.LoadScene(sceneToReturnTo);
     }
 }

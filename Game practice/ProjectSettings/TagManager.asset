@@ -7,6 +7,7 @@ TagManager:
   - Floor
   - GearButtom
   - MainMenu
+  - pible
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Player
   - Wall
   - Door
-  - 
+  - pible
   - 
   - 
   - 
@@ -58,6 +59,9 @@ TagManager:
     locked: 0
   - name: arrow
     uniqueID: 2493837657
+    locked: 0
+  - name: pible
+    uniqueID: 3830727591
     locked: 0
   m_RenderingLayers:
   - Default

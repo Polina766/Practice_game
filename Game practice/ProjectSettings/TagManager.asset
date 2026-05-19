@@ -8,6 +8,7 @@ TagManager:
   - GearButtom
   - MainMenu
   - pible
+  - Mag
   layers:
   - Default
   - TransparentFX
@@ -62,6 +63,9 @@ TagManager:
     locked: 0
   - name: pible
     uniqueID: 3830727591
+    locked: 0
+  - name: Mag
+    uniqueID: 3010231695
     locked: 0
   m_RenderingLayers:
   - Default

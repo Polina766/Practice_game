@@ -40,8 +40,23 @@ public class CauldronPuzzle : MonoBehaviour
     private MonoBehaviour playerController;
     private Collider2D triggerCollider;    // коллайдер котла/триггера
 
+    // ДОБАВЛЕНО: ключ для сохранения
+    private const string CAULDRON_PUZZLE_KEY = "CauldronPuzzleCompleted";
+
     void Start()
     {
+        // ДОБАВЛЕНО: загружаем сохранение - пройдена ли головоломка
+        puzzleCompleted = PlayerPrefs.GetInt(CAULDRON_PUZZLE_KEY, 0) == 1;
+
+        if (puzzleCompleted)
+        {
+            Debug.Log("Головоломка с котлом уже пройдена, отключаем");
+            // Отключаем триггер, чтобы нельзя было открыть
+            if (GetComponent<Collider2D>() != null)
+                GetComponent<Collider2D>().enabled = false;
+            return;
+        }
+
         // Сохраняем исходный размер каждого слота
         for (int i = 0; i < slots.Length; i++)
         {
@@ -266,6 +281,10 @@ public class CauldronPuzzle : MonoBehaviour
             Debug.Log("Зелье готово! 🧪");
             puzzleCompleted = true;
 
+            // ДОБАВЛЕНО: СОХРАНЯЕМ ПРОГРЕСС
+            PlayerPrefs.SetInt(CAULDRON_PUZZLE_KEY, 1);
+            PlayerPrefs.Save();
+
             // Показываем крестик
             if (closeButton != null)
                 closeButton.gameObject.SetActive(true);
@@ -314,5 +333,18 @@ public class CauldronPuzzle : MonoBehaviour
             if (slots[i] != null)
                 slots[i].onClick.RemoveAllListeners();
         }
+    }
+
+    // ДОБАВЛЕНО: метод для сброса прогресса (если нужно будет сбросить)
+    public void ResetProgress()
+    {
+        puzzleCompleted = false;
+        PlayerPrefs.SetInt(CAULDRON_PUZZLE_KEY, 0);
+        PlayerPrefs.Save();
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
+
+        Debug.Log("Прогресс головоломки с котлом сброшен");
     }
 }

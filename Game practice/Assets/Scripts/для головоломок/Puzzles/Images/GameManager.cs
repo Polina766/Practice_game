@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManagerS : MonoBehaviour
 {
     [Header("Game Elements")]
     [Range(2, 6)]

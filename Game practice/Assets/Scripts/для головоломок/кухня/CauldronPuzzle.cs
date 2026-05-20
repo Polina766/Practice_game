@@ -29,6 +29,10 @@ public class CauldronPuzzle : MonoBehaviour
     public float activationRange = 3f;  // дистанция активации
     public KeyCode activationKey = KeyCode.Mouse1;  // правая кнопка мыши
 
+    [Header("GameManager Integration")]
+    [Tooltip("Какой шаг сюжета нужен для активации")]
+    public GameManager.StoryStep requiredStep = GameManager.StoryStep.Puzzle2;
+
     // Внутренние переменные
     private List<int> selectedIndices = new List<int>();
     private Dictionary<int, Vector3> originalScales = new Dictionary<int, Vector3>();
@@ -39,13 +43,14 @@ public class CauldronPuzzle : MonoBehaviour
     private Rigidbody2D playerRigidbody;
     private MonoBehaviour playerController;
     private Collider2D triggerCollider;    // коллайдер котла/триггера
+    private bool hasNotifiedGameManager = false; // уведомили ли GameManager
 
-    // ДОБАВЛЕНО: ключ для сохранения
+    // Ключ для сохранения
     private const string CAULDRON_PUZZLE_KEY = "CauldronPuzzleCompleted";
 
     void Start()
     {
-        // ДОБАВЛЕНО: загружаем сохранение - пройдена ли головоломка
+        // Загружаем сохранение - пройдена ли головоломка
         puzzleCompleted = PlayerPrefs.GetInt(CAULDRON_PUZZLE_KEY, 0) == 1;
 
         if (puzzleCompleted)
@@ -87,6 +92,9 @@ public class CauldronPuzzle : MonoBehaviour
 
         // Настраиваем триггер
         SetupTrigger();
+
+        // Проверяем доступность через GameManager
+        CheckAvailability();
     }
 
     void Update()
@@ -96,9 +104,33 @@ public class CauldronPuzzle : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(1)) // 1 - правая кнопка
             {
+                // Проверяем через GameManager
+                if (GameManager.Instance != null && GameManager.Instance.GetCurrentStep() != requiredStep)
+                {
+                    Debug.Log($"Головоломка с котлом недоступна на шаге {GameManager.Instance.GetCurrentStep()}");
+                    return;
+                }
                 OpenPuzzle();
             }
         }
+    }
+
+    // Проверка доступности через GameManager
+    public void CheckAvailability()
+    {
+        if (GameManager.Instance == null) return;
+        if (puzzleCompleted) return;
+
+        bool shouldBeActive = (GameManager.Instance.GetCurrentStep() == requiredStep);
+
+        if (triggerCollider != null)
+            triggerCollider.enabled = shouldBeActive;
+    }
+
+    // Публичный метод для проверки статуса (нужен для PuzzleEntranceTrigger)
+    public bool IsPuzzleCompleted()
+    {
+        return puzzleCompleted;
     }
 
     void SetupTrigger()
@@ -129,6 +161,12 @@ public class CauldronPuzzle : MonoBehaviour
             // Если активация при приближении включена
             if (activateOnApproach && !puzzleCompleted)
             {
+                // Проверяем через GameManager
+                if (GameManager.Instance != null && GameManager.Instance.GetCurrentStep() != requiredStep)
+                {
+                    Debug.Log($"Головоломка с котлом недоступна на шаге {GameManager.Instance.GetCurrentStep()}");
+                    return;
+                }
                 OpenPuzzle();
             }
         }
@@ -281,13 +319,20 @@ public class CauldronPuzzle : MonoBehaviour
             Debug.Log("Зелье готово! 🧪");
             puzzleCompleted = true;
 
-            // ДОБАВЛЕНО: СОХРАНЯЕМ ПРОГРЕСС
+            // СОХРАНЯЕМ ПРОГРЕСС
             PlayerPrefs.SetInt(CAULDRON_PUZZLE_KEY, 1);
             PlayerPrefs.Save();
 
             // Показываем крестик
             if (closeButton != null)
                 closeButton.gameObject.SetActive(true);
+
+            // УВЕДОМЛЯЕМ GAME MANAGER
+            if (!hasNotifiedGameManager && GameManager.Instance != null)
+            {
+                hasNotifiedGameManager = true;
+                StartCoroutine(NotifyGameManagerAndClose());
+            }
         }
         else
         {
@@ -306,6 +351,21 @@ public class CauldronPuzzle : MonoBehaviour
             // Очищаем список выбранных
             selectedIndices.Clear();
         }
+    }
+
+    // Уведомляем GameManager и закрываем головоломку
+    private IEnumerator NotifyGameManagerAndClose()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.CompletePuzzle("CauldronPuzzle");
+        }
+
+        // Автоматически закрываем панель через 1.5 секунды
+        yield return new WaitForSecondsRealtime(1.5f);
+        ClosePuzzle();
     }
 
     // Сброс головоломки
@@ -335,15 +395,16 @@ public class CauldronPuzzle : MonoBehaviour
         }
     }
 
-    // ДОБАВЛЕНО: метод для сброса прогресса (если нужно будет сбросить)
+    // Метод для сброса прогресса (если нужно будет сбросить)
     public void ResetProgress()
     {
         puzzleCompleted = false;
+        hasNotifiedGameManager = false;
         PlayerPrefs.SetInt(CAULDRON_PUZZLE_KEY, 0);
         PlayerPrefs.Save();
 
-        if (GetComponent<Collider2D>() != null)
-            GetComponent<Collider2D>().enabled = true;
+        if (triggerCollider != null)
+            triggerCollider.enabled = true;
 
         Debug.Log("Прогресс головоломки с котлом сброшен");
     }

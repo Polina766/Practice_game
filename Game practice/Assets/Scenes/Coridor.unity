@@ -119,6 +119,112 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &459127606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 459127609}
+  - component: {fileID: 459127608}
+  - component: {fileID: 459127607}
+  m_Layer: 0
+  m_Name: DialogueTrigger 9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &459127607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459127606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f9403e4bc8f84cb9ec2b4b490811e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
+  speakerNames:
+  - Girl
+  - House
+  - Mage
+  - Girl
+  dialogueLines:
+  - " It\u2019s kinda\u2026 creepy here."
+  - (creaks slightly)
+  - The house is listening
+  - Thanks. That makes it worse.
+  dialogueManager: {fileID: 1084893058}
+  playOnlyOnce: 1
+  destroyAfterDialogue: 1
+  requiredStep: 11
+  disableIfWrongStep: 1
+--- !u!61 &459127608
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459127606}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.33999395, y: 0.3949932}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.72000504, y: 1.7899864}
+  m_EdgeRadius: 0
+--- !u!4 &459127609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459127606}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.82, y: 1.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &463103172 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5567922882700225505, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
@@ -442,6 +548,119 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8819fe426a033144ab19dc9f1402848f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveIndicator
+--- !u!1001 &1084893056
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1758303184}
+    m_Modifications:
+    - target: {fileID: 669100960945638889, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_Name
+      value: Dialogue
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+--- !u!224 &1084893057 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+  m_PrefabInstance: {fileID: 1084893056}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1084893058 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+  m_PrefabInstance: {fileID: 1084893056}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 735509451cbd4ff46b0e8cc2ba4b8b97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
 --- !u!1 &1472987084
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +999,7 @@ RectTransform:
   m_Children:
   - {fileID: 895629937}
   - {fileID: 1637421887}
+  - {fileID: 1084893057}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1073,6 +1293,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 12.487696, y: 3.0157962}
   m_EdgeRadius: 0
+--- !u!4 &984675045252454567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865658994591774049}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.94, y: 1.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1225522501196767583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,6 +1683,52 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!61 &3513400841886880061
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865658994591774049}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.33999395, y: 0.3949932}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.72000504, y: 1.7899864}
+  m_EdgeRadius: 0
 --- !u!114 &3524900054835790491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1802,6 +2083,24 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 0, z: -10}
+--- !u!1 &5865658994591774049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 984675045252454567}
+  - component: {fileID: 3513400841886880061}
+  - component: {fileID: 8925420494400505616}
+  m_Layer: 0
+  m_Name: DialogueTrigger 8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &5867464153374899473
 Transform:
   m_ObjectHideFlags: 0
@@ -2435,6 +2734,41 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &8925420494400505616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865658994591774049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f9403e4bc8f84cb9ec2b4b490811e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
+  speakerNames:
+  - Girl
+  - Mage
+  - Girl
+  - Mage
+  - Mage
+  - Mage
+  - Girl
+  - Mage
+  dialogueLines:
+  - "What\u2019s in there?"
+  - Nothing...
+  - You said that suspiciously fast
+  - "Because that\u2019s\u2026"
+  - (pause)
+  - the work zone.
+  - You just made that up
+  - " I\u2019m a magician. I make everything up."
+  dialogueManager: {fileID: 1084893058}
+  playOnlyOnce: 1
+  destroyAfterDialogue: 1
+  requiredStep: 10
+  disableIfWrongStep: 1
 --- !u!1 &9192846815706725149
 GameObject:
   m_ObjectHideFlags: 0
@@ -2470,3 +2804,5 @@ SceneRoots:
   - {fileID: 619342131451339900}
   - {fileID: 1930742862}
   - {fileID: 1550150369}
+  - {fileID: 984675045252454567}
+  - {fileID: 459127609}

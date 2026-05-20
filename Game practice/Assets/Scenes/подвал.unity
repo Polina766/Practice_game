@@ -580,6 +580,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: gameplayScenes.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374136541045738993, guid: 075c30eb1056a664b9dfcd42635abfcc, type: 3}
+      propertyPath: 'gameplayScenes.Array.data[4]'
+      value: "\u043F\u043E\u0434\u0432\u0430\u043B"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

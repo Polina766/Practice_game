@@ -2309,6 +2309,7 @@ GameObject:
   - component: {fileID: 853199013}
   - component: {fileID: 853199012}
   - component: {fileID: 853199011}
+  - component: {fileID: 853199014}
   m_Layer: 0
   m_Name: DialogueTrigger 7
   m_TagString: Untagged
@@ -2353,8 +2354,6 @@ MonoBehaviour:
   dialogueManager: {fileID: 1137868402286140931}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
-  requiredStep: 9
-  disableIfWrongStep: 1
 --- !u!61 &853199012
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2416,6 +2415,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &853199014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853199010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e11c3837f22ac442aca1112f564c383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
+  triggerID: d7
+  delayBeforeReport: 0
 --- !u!224 &895629937
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3934,6 +3947,7 @@ GameObject:
   - component: {fileID: 1998795390}
   - component: {fileID: 1998795392}
   - component: {fileID: 1998795391}
+  - component: {fileID: 1998795393}
   m_Layer: 0
   m_Name: TriggerBooks
   m_TagString: Untagged
@@ -4015,7 +4029,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleTrigger
   puzzleUI: {fileID: 14634869}
-  requiredStep: 8
+--- !u!114 &1998795393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998795389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e11c3837f22ac442aca1112f564c383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
+  triggerID: p3
+  delayBeforeReport: 0
 --- !u!1 &2055335111
 GameObject:
   m_ObjectHideFlags: 0
@@ -4027,6 +4054,7 @@ GameObject:
   - component: {fileID: 2055335114}
   - component: {fileID: 2055335113}
   - component: {fileID: 2055335112}
+  - component: {fileID: 2055335115}
   m_Layer: 0
   m_Name: DialogueTrigger 6
   m_TagString: Untagged
@@ -4065,8 +4093,6 @@ MonoBehaviour:
   dialogueManager: {fileID: 1137868402286140931}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
-  requiredStep: 7
-  disableIfWrongStep: 1
 --- !u!61 &2055335113
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4128,6 +4154,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2055335115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055335111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e11c3837f22ac442aca1112f564c383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
+  triggerID: d6
+  delayBeforeReport: 0
 --- !u!1001 &2086894224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5351,8 +5391,6 @@ MonoBehaviour:
   dialogueManager: {fileID: 1137868402286140931}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
-  requiredStep: 4
-  disableIfWrongStep: 1
 --- !u!1 &6675804777982274990
 GameObject:
   m_ObjectHideFlags: 0
@@ -5611,6 +5649,7 @@ GameObject:
   - component: {fileID: 3210852002710581313}
   - component: {fileID: 1290108865515715035}
   - component: {fileID: 6555005717884399606}
+  - component: {fileID: 8089161582215110024}
   m_Layer: 0
   m_Name: DialogueTrigger 4
   m_TagString: Untagged
@@ -5618,6 +5657,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8089161582215110024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089161582215110023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e11c3837f22ac442aca1112f564c383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
+  triggerID: d4
+  delayBeforeReport: 0
 --- !u!60 &8363669213662235725
 PolygonCollider2D:
   m_ObjectHideFlags: 0

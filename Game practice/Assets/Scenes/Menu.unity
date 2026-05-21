@@ -1159,6 +1159,46 @@ PrefabInstance:
       propertyPath: storySteps.Array.data[0].isComplete
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[0].requiredTriggerID
+      value: d1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[1].requiredTriggerID
+      value: d2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[2].requiredTriggerID
+      value: p1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[3].requiredTriggerID
+      value: d3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[4].requiredTriggerID
+      value: d4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[5].requiredTriggerID
+      value: p2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[6].requiredTriggerID
+      value: d5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[7].requiredTriggerID
+      value: d6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[8].requiredTriggerID
+      value: p3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[9].requiredTriggerID
+      value: d7
+      objectReference: {fileID: 0}
     - target: {fileID: 8352446467953455556, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: m_Name
       value: MainGameManager

@@ -1151,6 +1151,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySteps.Array.data[0].isComplete
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8352446467953455556, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: m_Name
       value: MainGameManager

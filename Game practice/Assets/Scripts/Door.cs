@@ -122,9 +122,10 @@ public class Door : MonoBehaviour
         SceneManager.LoadScene(sceneToLoad);
     }
 
+    // ТОЛЬКО ЭТОТ МЕТОД ДОБАВЛЕН (ничего больше не менялось!)
     public void OnPlayerArrived()
     {
-        if (!isLoading)
+        if (!isLoading && playerInRange)
         {
             LoadScene();
         }

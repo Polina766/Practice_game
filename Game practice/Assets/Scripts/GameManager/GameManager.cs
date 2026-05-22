@@ -6,23 +6,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // Текущий шаг сюжета (0 - начало)
-    private int currentStep = 0;
+    [Header("Настройки сюжета")]
+    public List<string> storySequence = new List<string>();
 
-    // Шаги, которые надо выполнить по порядку
-    // Ключ - номер шага, значение - ID триггера, который должен выполниться на этом шаге
-    [System.Serializable]
-    public class StepRequirement
-    {
-        public int stepIndex;
-        public string requiredTriggerID; // например "DialogueTrigger1"
-        public bool isComplete = false;
-    }
+    [Header("Состояние игры")]
+    public int currentStepIndex = 0;
+    public string currentSceneName = "";
 
-    public List<StepRequirement> storySteps = new List<StepRequirement>();
+    [Header("Компоненты")]
+    public GameObject playerPrefab; // Префаб игрока (если нужно спавнить)
 
-    // Для сохранения прогресса между сценами
-    private Dictionary<string, bool> completedTriggers = new Dictionary<string, bool>();
+    private bool isLoadingGame = false;
 
     void Awake()
     {
@@ -33,83 +27,240 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Подписываемся на событие загрузки сцены
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
     {
-        // Настраиваем шаги по вашему описанию (можно задать в инспекторе)
-        if (storySteps.Count == 0)
-            SetupDefaultSteps();
+        if (storySequence.Count == 0)
+            SetupDefaultSequence();
+
+        // Не запускаем инициализацию автоматически, ждём команды от UI
     }
 
-    void SetupDefaultSteps()
+    void SetupDefaultSequence()
     {
-        // Пример вашей последовательности
-        storySteps = new List<StepRequirement>()
+        storySequence = new List<string>()
         {
-            new StepRequirement() { stepIndex = 0, requiredTriggerID = "DialogueTrigger1" },
-            new StepRequirement() { stepIndex = 1, requiredTriggerID = "DialogueTrigger2" },
-            new StepRequirement() { stepIndex = 2, requiredTriggerID = "DialogueTrigger3" },
-            new StepRequirement() { stepIndex = 3, requiredTriggerID = "тригер для головоломки" }, // головоломка 1
-            new StepRequirement() { stepIndex = 4, requiredTriggerID = "DialogueTrigger4" },
-            new StepRequirement() { stepIndex = 5, requiredTriggerID = "DialogueTrigger5" },
-            new StepRequirement() { stepIndex = 6, requiredTriggerID = "PuzzleManager" }, // головоломка 2
-            new StepRequirement() { stepIndex = 7, requiredTriggerID = "DialogueTrigger6" },
-            new StepRequirement() { stepIndex = 8, requiredTriggerID = "DialogueTrigger7" },
-            new StepRequirement() { stepIndex = 9, requiredTriggerID = "TriggerBook" }, // головоломка 3
-            new StepRequirement() { stepIndex = 10, requiredTriggerID = "DialogueTrigger8" },
-            new StepRequirement() { stepIndex = 11, requiredTriggerID = "DialogueTrigger9" },
-            new StepRequirement() { stepIndex = 12, requiredTriggerID = "DialogueTrigger10" },
-            new StepRequirement() { stepIndex = 13, requiredTriggerID = "ImageTrigger" }, // головоломка 4
-            new StepRequirement() { stepIndex = 14, requiredTriggerID = "DialogueTrigger11" }
+            "DialogueTrigger1",
+            "DialogueTrigger2",
+            "тригер для головоломки",
+            "DialogueTrigger3",
+            "DialogueTrigger4",
+            "DialogueTrigger5",
+            "PuzzleManager",
+            "DialogueTrigger6",
+            "DialogueTrigger7",
+            "TriggerBook",
+            "DialogueTrigger8",
+            "DialogueTrigger9",
+            "DialogueTrigger10",
+            "ImageTrigger",
+            "DialogueTrigger11"
         };
     }
 
-    // Вызывается любым триггером, на который повешен QuestStepTrigger
+    // ========== КНОПКИ UI ==========
+
+    public void NewGame()
+    {
+        Debug.Log("🎮 Начинаем новую игру");
+
+        // Удаляем старое сохранение
+        SaveSystem.DeleteSave();
+
+        // Сбрасываем прогресс
+        currentStepIndex = 0;
+        isLoadingGame = false;
+
+        // Загружаем первую сцену (укажите название вашей первой сцены)
+        SceneManager.LoadScene("Hall"); // Замените на имя вашей первой сцены
+    }
+
+    public void ContinueGame()
+    {
+        if (!SaveSystem.HasSavedGame())
+        {
+            Debug.LogWarning("⚠️ Нет сохранённой игры!");
+            return;
+        }
+
+        Debug.Log("📀 Загружаем сохранённую игру");
+
+        GameData data = SaveSystem.LoadGame();
+        if (data != null)
+        {
+            currentStepIndex = data.currentStepIndex;
+            isLoadingGame = true;
+
+            // Загружаем сохранённую сцену
+            SceneManager.LoadScene(data.currentSceneName);
+        }
+    }
+
+    // Вызывается после загрузки сцены
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentSceneName = scene.name;
+
+        if (isLoadingGame)
+        {
+            // Восстанавливаем состояние триггеров после загрузки
+            RestoreTriggersState();
+
+            // Восстанавливаем позицию игрока (если сохраняли)
+            RestorePlayerPosition();
+
+            isLoadingGame = false;
+        }
+        else
+        {
+            // Новая игра - активируем только первый триггер
+            DisableAllTriggersExcept(GetCurrentExpectedTrigger());
+        }
+    }
+
+    // Вызывается триггерами
     public void ReportTrigger(string triggerID)
     {
-        // Проверяем, нужен ли этот триггер сейчас
-        StepRequirement currentReq = GetCurrentStepRequirement();
-
-        if (currentReq != null && currentReq.requiredTriggerID == triggerID && !currentReq.isComplete)
+        if (currentStepIndex < storySequence.Count)
         {
-            Debug.Log($"✅ GameManager: шаг {currentStep} выполнен триггером '{triggerID}'");
-            currentReq.isComplete = true;
-            currentStep++;
+            string expectedID = storySequence[currentStepIndex];
 
-            // Доп. логика: отключаем старый триггер, чтобы не сработал снова (опционально)
-            DisableTriggerGameObject(triggerID);
-        }
-        else
-        {
-            // Если триггер не по очереди - игнорируем (или можно вывести предупреждение)
-            Debug.Log($"⚠️ Триггер '{triggerID}' проигнорирован, сейчас ожидается: " +
-                      (currentReq != null ? currentReq.requiredTriggerID : "шаг завершен"));
+            if (expectedID == triggerID)
+            {
+                Debug.Log($"✅ Шаг {currentStepIndex + 1}/{storySequence.Count} выполнен: {triggerID}");
+                currentStepIndex++;
+
+                // Автоматически сохраняем прогресс
+                AutoSave();
+
+                // Активируем следующий триггер
+                if (currentStepIndex < storySequence.Count)
+                {
+                    DisableAllTriggersExcept(storySequence[currentStepIndex]);
+                }
+                else
+                {
+                    Debug.Log("🎉 Игра пройдена! Поздравляю!");
+                }
+            }
+            else
+            {
+                Debug.Log($"⚠️ Сейчас ожидается '{expectedID}', а вы активировали '{triggerID}'");
+            }
         }
     }
 
-    StepRequirement GetCurrentStepRequirement()
+    // Автосохранение
+    public void AutoSave()
     {
-        if (currentStep < storySteps.Count)
-            return storySteps[currentStep];
-        else
+        GameData data = new GameData();
+        data.currentStepIndex = currentStepIndex;
+        data.currentSceneName = SceneManager.GetActiveScene().name;
+        data.hasSavedGame = true;
+
+        // Сохраняем позицию игрока (опционально)
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            Debug.Log("🎉 Игра пройдена!");
-            return null;
+            data.playerPosX = player.transform.position.x;
+            data.playerPosY = player.transform.position.y;
+        }
+
+        SaveSystem.SaveGame(data);
+    }
+
+    // Сохранение при выходе в меню (вызывать из кнопки "Выход в меню")
+    public void SaveAndGoToMenu()
+    {
+        AutoSave();
+        SceneManager.LoadScene("Menu"); // Название вашей сцены с меню
+    }
+
+    // Восстановление состояния триггеров
+    void RestoreTriggersState()
+    {
+        // Отключаем ВСЕ триггеры
+        QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
+        foreach (var trigger in allTriggers)
+        {
+            trigger.gameObject.SetActive(false);
+        }
+
+        // Включаем триггер, который должен быть следующим
+        if (currentStepIndex < storySequence.Count)
+        {
+            string nextTriggerID = storySequence[currentStepIndex];
+            EnableTrigger(nextTriggerID);
+        }
+
+        // Также включаем ВСЕ уже пройденные триггеры, если они нужны для декораций?
+        // (обычно их лучше оставить выключенными, чтобы диалоги не повторялись)
+        for (int i = 0; i < currentStepIndex; i++)
+        {
+            DisableTrigger(storySequence[i]); // Убеждаемся, что старые выключены
         }
     }
 
-    // Опционально: отключаем GameObject самого триггера после выполнения, чтобы он не мешал
-    void DisableTriggerGameObject(string triggerID)
+    // Восстановление позиции игрока
+    void RestorePlayerPosition()
+    {
+        GameData data = SaveSystem.LoadGame();
+        if (data != null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null && (data.playerPosX != 0 || data.playerPosY != 0))
+            {
+                player.transform.position = new Vector3(data.playerPosX, data.playerPosY, 0);
+                Debug.Log($"📍 Восстановлена позиция игрока: ({data.playerPosX}, {data.playerPosY})");
+            }
+        }
+    }
+
+    void DisableAllTriggersExcept(string activeTriggerID)
+    {
+        QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
+        foreach (var trigger in allTriggers)
+        {
+            if (trigger.triggerID == activeTriggerID)
+                trigger.gameObject.SetActive(true);
+            else
+                trigger.gameObject.SetActive(false);
+        }
+    }
+
+    void EnableTrigger(string triggerID)
+    {
+        QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
+        foreach (var trigger in allTriggers)
+        {
+            if (trigger.triggerID == triggerID)
+            {
+                trigger.gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
+
+    void DisableTrigger(string triggerID)
     {
         GameObject obj = GameObject.Find(triggerID);
         if (obj != null)
             obj.SetActive(false);
     }
 
-    // Для проверки в инспекторе
-    public int GetCurrentStep()
+    string GetCurrentExpectedTrigger()
     {
-        return currentStep;
+        if (currentStepIndex < storySequence.Count)
+            return storySequence[currentStepIndex];
+        return "GameComplete";
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

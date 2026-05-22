@@ -2,25 +2,39 @@ using UnityEngine;
 
 public class QuestStepTrigger : MonoBehaviour
 {
-    [Tooltip("Уникальный ID этого триггера, совпадает с requiredTriggerID в GameManager")]
+    [Tooltip("Уникальный ID этого триггера")]
     public string triggerID;
 
-    // Опционально: задержка перед уведомлением (если нужно, чтобы диалог успел начаться)
     public float delayBeforeReport = 0f;
 
     private bool alreadyReported = false;
+    private bool hasNotified = false;
 
     void Start()
     {
-        // Автоматически задаем ID из имени объекта, если не заполнено
         if (string.IsNullOrEmpty(triggerID))
             triggerID = gameObject.name;
     }
 
-    // Этот метод вызывается из ваших существующих скриптов или из OnTriggerEnter
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !hasNotified)
+        {
+            NotifyQuestCompleted();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !hasNotified)
+        {
+            NotifyQuestCompleted();
+        }
+    }
+
     public void NotifyQuestCompleted()
     {
-        if (alreadyReported) return;
+        if (hasNotified) return;
 
         if (GameManager.Instance != null)
         {
@@ -29,32 +43,18 @@ public class QuestStepTrigger : MonoBehaviour
             else
                 SendReport();
         }
-        else
-        {
-            Debug.LogWarning("GameManager не найден!");
-        }
     }
 
     void SendReport()
     {
         GameManager.Instance.ReportTrigger(triggerID);
-        alreadyReported = true;
+        hasNotified = true;
     }
 
-    // Стандартный вход в триггер (если у вас старый триггер на Collider2D)
-    void OnTriggerEnter2D(Collider2D other)
+    // Для отладки
+    void OnDrawGizmos()
     {
-        if (other.CompareTag("Player"))
-        {
-            NotifyQuestCompleted();
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            NotifyQuestCompleted();
-        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(transform.position, Vector3.one);
     }
 }

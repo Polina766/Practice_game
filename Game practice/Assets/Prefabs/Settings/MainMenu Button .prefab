@@ -149,6 +149,8 @@ MonoBehaviour:
   normalScale: {x: 1, y: 1, z: 1}
   hoverScale: {x: 1.1, y: 1.1, z: 1.1}
   speed: 10
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
 --- !u!1 &1642754300535206924
 GameObject:
   m_ObjectHideFlags: 0

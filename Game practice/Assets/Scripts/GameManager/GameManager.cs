@@ -58,7 +58,8 @@ public class GameManager : MonoBehaviour
             "DialogueTrigger9",
             "DialogueTrigger10",
             "ImageTrigger",
-            "DialogueTrigger11"
+            "DialogueTrigger11",
+            "portal"
         };
     }
 
@@ -75,8 +76,8 @@ public class GameManager : MonoBehaviour
         currentStepIndex = 0;
         isLoadingGame = false;
 
-        // Загружаем первую сцену (укажите название вашей первой сцены)
-        SceneManager.LoadScene("Hall"); // Замените на имя вашей первой сцены
+        // Загружаем первую сцену
+        SceneManager.LoadScene("Hall");
     }
 
     public void ContinueGame()
@@ -104,21 +105,35 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = scene.name;
+        Debug.Log($"📱 Загружена сцена: {scene.name}");
+
+        // ФИКС: перезапускаем коллайдеры на дверях
+        Invoke(nameof(FixAllDoorColliders), 0.05f);
 
         if (isLoadingGame)
         {
-            // Восстанавливаем состояние триггеров после загрузки
             RestoreTriggersState();
-
-            // Восстанавливаем позицию игрока (если сохраняли)
             RestorePlayerPosition();
-
             isLoadingGame = false;
         }
         else
         {
-            // Новая игра - активируем только первый триггер
             DisableAllTriggersExcept(GetCurrentExpectedTrigger());
+        }
+    }
+
+    void FixAllDoorColliders()
+    {
+        GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
+        foreach (GameObject door in doors)
+        {
+            Collider2D col = door.GetComponent<Collider2D>();
+            if (col != null)
+            {
+                col.enabled = false;
+                col.enabled = true;
+                Debug.Log($"🔧 Починен коллайдер: {door.name}");
+            }
         }
     }
 
@@ -162,7 +177,6 @@ public class GameManager : MonoBehaviour
         data.currentSceneName = SceneManager.GetActiveScene().name;
         data.hasSavedGame = true;
 
-        // Сохраняем позицию игрока (опционально)
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -173,35 +187,34 @@ public class GameManager : MonoBehaviour
         SaveSystem.SaveGame(data);
     }
 
-    // Сохранение при выходе в меню (вызывать из кнопки "Выход в меню")
+    // Сохранение при выходе в меню
     public void SaveAndGoToMenu()
     {
         AutoSave();
-        SceneManager.LoadScene("Menu"); // Название вашей сцены с меню
+        SceneManager.LoadScene("Menu");
     }
 
     // Восстановление состояния триггеров
     void RestoreTriggersState()
     {
-        // Отключаем ВСЕ триггеры
+        // Отключаем ВСЕ триггеры, КРОМЕ ДВЕРЕЙ
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
         foreach (var trigger in allTriggers)
         {
+            // Пропускаем двери (не отключаем их)
+            if (trigger.CompareTag("Door"))
+            {
+                Debug.Log($"🚪 Дверь '{trigger.triggerID}' пропущена (не отключаем)");
+                continue;
+            }
             trigger.gameObject.SetActive(false);
         }
 
-        // Включаем триггер, который должен быть следующим
+        // Включаем следующий квестовый триггер
         if (currentStepIndex < storySequence.Count)
         {
             string nextTriggerID = storySequence[currentStepIndex];
             EnableTrigger(nextTriggerID);
-        }
-
-        // Также включаем ВСЕ уже пройденные триггеры, если они нужны для декораций?
-        // (обычно их лучше оставить выключенными, чтобы диалоги не повторялись)
-        for (int i = 0; i < currentStepIndex; i++)
-        {
-            DisableTrigger(storySequence[i]); // Убеждаемся, что старые выключены
         }
     }
 
@@ -223,12 +236,33 @@ public class GameManager : MonoBehaviour
     void DisableAllTriggersExcept(string activeTriggerID)
     {
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
+        int enabledCount = 0;
+
         foreach (var trigger in allTriggers)
         {
+            // ПРОВЕРКА НА ДВЕРЬ - не отключаем двери!
+            if (trigger.CompareTag("Door"))
+            {
+                Debug.Log($"🚪 Дверь '{trigger.triggerID}' пропущена, остаётся активной");
+                continue; // пропускаем, ничего не делаем с дверью
+            }
+
+            // Обычные квестовые триггеры
             if (trigger.triggerID == activeTriggerID)
+            {
                 trigger.gameObject.SetActive(true);
+                enabledCount++;
+                Debug.Log($"✅ Активирован квестовый триггер: {trigger.triggerID}");
+            }
             else
+            {
                 trigger.gameObject.SetActive(false);
+            }
+        }
+
+        if (enabledCount == 0 && activeTriggerID != "GameComplete")
+        {
+            Debug.LogWarning($"⚠️ Триггер с ID '{activeTriggerID}' не найден в этой сцене!");
         }
     }
 
@@ -240,6 +274,7 @@ public class GameManager : MonoBehaviour
             if (trigger.triggerID == triggerID)
             {
                 trigger.gameObject.SetActive(true);
+                Debug.Log($"🔓 Включён квестовый триггер: {triggerID}");
                 break;
             }
         }

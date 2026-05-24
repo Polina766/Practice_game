@@ -4233,9 +4233,9 @@ GameObject:
   - component: {fileID: 1810246242855805327}
   - component: {fileID: 6101991729419740996}
   - component: {fileID: 6718668307003018693}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: DoorRight
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4515,7 +4515,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1001 &2192042047859479554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4530,7 +4530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3998345973465275230, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.8300004
+      value: -3.21
       objectReference: {fileID: 0}
     - target: {fileID: 3998345973465275230, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4542,7 +4542,7 @@ PrefabInstance:
       objectReference: {fileID: 841628871799295769}
     - target: {fileID: 4465256440550338092, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.8300004
+      value: -3.21
       objectReference: {fileID: 0}
     - target: {fileID: 4465256440550338092, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4554,7 +4554,7 @@ PrefabInstance:
       objectReference: {fileID: 463103172}
     - target: {fileID: 5694477577316329747, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.8300004
+      value: -3.21
       objectReference: {fileID: 0}
     - target: {fileID: 5694477577316329747, guid: ed4f194430549d24b8b021d46f10d5ec, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4647,7 +4647,7 @@ PrefabInstance:
       objectReference: {fileID: 1049748903}
     - target: {fileID: 8597427196213146518, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.76
+      value: -5.14
       objectReference: {fileID: 0}
     - target: {fileID: 8597427196213146518, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4727,7 +4727,7 @@ Transform:
   m_GameObject: {fileID: 6731594657176395540}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.86, y: 3.64, z: 0}
+  m_LocalPosition: {x: -7.16, y: 3.64, z: 0}
   m_LocalScale: {x: 4.4077396, y: 4.5810046, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5082,7 +5082,7 @@ Transform:
   m_GameObject: {fileID: 2036644220553682024}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.32, y: -1.9975125, z: 0}
+  m_LocalPosition: {x: -7.87, y: -1.87, z: 0}
   m_LocalScale: {x: 2.9371343, y: 2.9935508, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5613,9 +5613,9 @@ GameObject:
   - component: {fileID: 4637892488616786270}
   - component: {fileID: 3524900054835790491}
   - component: {fileID: 5072006547993598485}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: DoorLeft
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

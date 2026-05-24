@@ -2048,22 +2048,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3816841493012730845, guid: 6591d051bf306a448902686e00fe889b, type: 3}
-      propertyPath: doorID
-      value: ToKitchen
-      objectReference: {fileID: 0}
-    - target: {fileID: 3816841493012730845, guid: 6591d051bf306a448902686e00fe889b, type: 3}
-      propertyPath: doorUniqueID
-      value: ToKitchen
-      objectReference: {fileID: 0}
-    - target: {fileID: 4425636565205039452, guid: 6591d051bf306a448902686e00fe889b, type: 3}
-      propertyPath: m_Size.x
-      value: 0.24847576
-      objectReference: {fileID: 0}
-    - target: {fileID: 4425636565205039452, guid: 6591d051bf306a448902686e00fe889b, type: 3}
-      propertyPath: m_Offset.x
-      value: 0.065293
-      objectReference: {fileID: 0}
     - target: {fileID: 7740970423747579930, guid: 6591d051bf306a448902686e00fe889b, type: 3}
       propertyPath: m_Name
       value: Door

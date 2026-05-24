@@ -11,6 +11,10 @@ public class MainMenuUI : MonoBehaviour
     [Header("Настройки")]
     public string firstSceneName = "Scene1"; // Название вашей первой сцены
 
+    [Header("Цвета для кнопки Continue")]
+    public Color normalColor = Color.white;                      // Когда есть сохранение
+    public Color disabledColor = new Color(0.3f, 0.3f, 0.3f, 1f); // Тёмно-серая (НЕ прозрачная!)
+
     void Start()
     {
         // Настраиваем кнопки
@@ -67,9 +71,28 @@ public class MainMenuUI : MonoBehaviour
             bool hasSave = SaveSystem.HasSavedGame();
             continueButton.interactable = hasSave;
 
-            // Можно добавить визуальный эффект (полупрозрачность)
+            // Меняем цвета кнопки (БЕЗ прозрачности!)
             ColorBlock colors = continueButton.colors;
-            colors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+            if (hasSave)
+            {
+                // Когда есть сохранение - кнопка нормальная (белая)
+                colors.normalColor = normalColor;
+                colors.highlightedColor = normalColor * 1.1f;
+                colors.pressedColor = normalColor * 0.9f;
+                colors.selectedColor = normalColor;
+                colors.disabledColor = disabledColor;
+            }
+            else
+            {
+                // Когда нет сохранения - кнопка тёмно-серая (полностью непрозрачная)
+                colors.normalColor = disabledColor;
+                colors.highlightedColor = disabledColor;
+                colors.pressedColor = disabledColor;
+                colors.selectedColor = disabledColor;
+                colors.disabledColor = disabledColor;
+            }
+
             continueButton.colors = colors;
         }
     }

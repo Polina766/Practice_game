@@ -312,6 +312,8 @@ MonoBehaviour:
   continueButton: {fileID: 1458928585}
   exitButton: {fileID: 784473843}
   firstSceneName: Hall
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
 --- !u!224 &328217528 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5747631171579447857, guid: 70dc20e30e0c2ef46b91490f8c2e8d3c, type: 3}
@@ -1171,6 +1173,70 @@ PrefabInstance:
     - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: storySteps.Array.size
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: storySequence.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[0]'
+      value: d1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[1]'
+      value: d2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[2]'
+      value: p1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[3]'
+      value: d3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[4]'
+      value: d4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[5]'
+      value: p2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[6]'
+      value: d5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[7]'
+      value: d6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[8]'
+      value: p3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[9]'
+      value: d7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[10]'
+      value: d8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[11]'
+      value: d9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[12]'
+      value: d10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[13]'
+      value: p4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
+      propertyPath: 'storySequence.Array.data[14]'
+      value: d11
       objectReference: {fileID: 0}
     - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: storySteps.Array.data[0].isComplete

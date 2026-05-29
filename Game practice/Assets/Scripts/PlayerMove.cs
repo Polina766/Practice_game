@@ -95,10 +95,7 @@ public class PlayerController : MonoBehaviour
 
                 Debug.Log("✅ Стрелочка поставлена! Цель: " + clickTarget);
             }
-            else
-            {
-                Debug.Log("❌ Нельзя поставить стрелочку! На пути стена.");
-            }
+            
         }
 
         // Движение к точке клика
@@ -214,8 +211,7 @@ public class PlayerController : MonoBehaviour
             targetDoor = null;
         }
 
-        // ДЛЯ ОТЛАДКИ - посмотри в консоли реальную скорость
-        Debug.Log("Скорость к двери: " + Mathf.Abs(PlayerRigidbody2D.linearVelocity.x));
+        
     }
     bool IsPointerOverUI()
     {
@@ -371,7 +367,7 @@ public class PlayerController : MonoBehaviour
         isMovingToClick = false;
         stuckTime = 0f;
 
-        Debug.Log("Движение остановлено");
+        
     }
 
     public void CancelMoveIndicator()
@@ -387,6 +383,6 @@ public class PlayerController : MonoBehaviour
         isMovingToClick = false;
         stuckTime = 0f;
 
-        Debug.Log("Стрелочка отменена");
+        
     }
 }

@@ -247,9 +247,9 @@ public class CauldronPuzzle : MonoBehaviour
         }
     }
 
+    // ЕДИНСТВЕННЫЙ метод CheckSolution (с уведомлением GameManager)
     IEnumerator CheckSolution()
     {
-        // Проверяем, все ли выбранные индексы входят в correctSlots
         bool allCorrect = true;
         foreach (int idx in selectedIndices)
         {
@@ -262,11 +262,16 @@ public class CauldronPuzzle : MonoBehaviour
 
         if (allCorrect && selectedIndices.Count == correctSlots.Length)
         {
-            // ПОБЕДА!
             Debug.Log("Зелье готово! 🧪");
             puzzleCompleted = true;
 
-            // Показываем крестик
+            // 🔥 УВЕДОМЛЯЕМ GAMEMANAGER
+            if (GameManager.Instance != null)
+            {
+                // Это имя ДОЛЖНО СОВПАДАТЬ с элементом в storySequence
+                GameManager.Instance.ReportTrigger("PuzzleManager");
+            }
+
             if (closeButton != null)
                 closeButton.gameObject.SetActive(true);
         }
@@ -275,16 +280,12 @@ public class CauldronPuzzle : MonoBehaviour
             // НЕПРАВИЛЬНО — сброс
             Debug.Log("Ошибка! Сброс...");
 
-            // Ждем 0.3 секунды в реальном времени (не зависит от Time.timeScale)
             yield return new WaitForSecondsRealtime(0.3f);
 
-            // Возвращаем все слоты в исходный размер
             foreach (int idx in selectedIndices)
             {
                 slots[idx].transform.localScale = originalScales[idx];
             }
-
-            // Очищаем список выбранных
             selectedIndices.Clear();
         }
     }

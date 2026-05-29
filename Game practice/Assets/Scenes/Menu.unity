@@ -1249,12 +1249,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: currentMagScene
-      value: Hall
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: currentMagObject
       value: 
-      objectReference: {fileID: 2526832943338086643, guid: 10f9bfb69f2087b49b7a25c1e0ac78a8, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 4985519329068616921, guid: 176e630321cb50d488fbc03583f9a7c9, type: 3}
       propertyPath: storySteps.Array.size
       value: 15

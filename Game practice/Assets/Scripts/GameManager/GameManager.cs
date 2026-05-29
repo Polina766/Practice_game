@@ -289,21 +289,38 @@ public class GameManager : MonoBehaviour
     {
         HideMagInAllScenes();
 
-        GameObject mag = GameObject.FindGameObjectWithTag("Mag");
+        // Ищем ВСЕ объекты с тегом Mag (включая выключенные)
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        GameObject mag = null;
+
+        foreach (GameObject obj in allObjects)
+        {
+            // Проверяем, что объект имеет тег Mag и находится в текущей сцене
+            if (obj.CompareTag("Mag") && obj.scene.name == sceneName)
+            {
+                mag = obj;
+                break;
+            }
+        }
+
+        // Альтернативный поиск по имени (если первый не сработал)
+        if (mag == null)
+        {
+            mag = GameObject.Find("Mage"); // "Mage" - имя вашего объекта мага
+        }
 
         if (mag != null)
         {
             mag.SetActive(true);
             currentMagObject = mag;
             currentMagScene = sceneName;
-            Debug.Log($"✨ Маг появился в сцене: {sceneName}");
+            Debug.Log($"✨ Маг '{mag.name}' появился в сцене: {sceneName}");
         }
         else
         {
-            Debug.LogWarning($"⚠️ Маг с тегом 'Mag' не найден в сцене {sceneName}");
+            Debug.LogError($"❌ Маг с тегом 'Mag' не найден в сцене {sceneName}!");
         }
     }
-
     public void HideMagInCurrentScene()
     {
         if (currentMagObject != null)

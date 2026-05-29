@@ -14,9 +14,13 @@ public class GameManager : MonoBehaviour
     public string currentSceneName = "";
 
     [Header("Компоненты")]
-    public GameObject playerPrefab; // Префаб игрока (если нужно спавнить)
+    public GameObject playerPrefab;
 
     private bool isLoadingGame = false;
+
+    [Header("Настройки мага")]
+    public string currentMagScene = "";
+    public GameObject currentMagObject;
 
     void Awake()
     {
@@ -28,7 +32,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Подписываемся на событие загрузки сцены
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -36,8 +39,6 @@ public class GameManager : MonoBehaviour
     {
         if (storySequence.Count == 0)
             SetupDefaultSequence();
-
-        // Не запускаем инициализацию автоматически, ждём команды от UI
     }
 
     void SetupDefaultSequence()
@@ -63,20 +64,12 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    // ========== КНОПКИ UI ==========
-
     public void NewGame()
     {
         Debug.Log("🎮 Начинаем новую игру");
-
-        // Удаляем старое сохранение
         SaveSystem.DeleteSave();
-
-        // Сбрасываем прогресс
         currentStepIndex = 0;
         isLoadingGame = false;
-
-        // Загружаем первую сцену
         SceneManager.LoadScene("Hall");
     }
 
@@ -89,26 +82,31 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("📀 Загружаем сохранённую игру");
-
         GameData data = SaveSystem.LoadGame();
         if (data != null)
         {
             currentStepIndex = data.currentStepIndex;
             isLoadingGame = true;
-
-            // Загружаем сохранённую сцену
             SceneManager.LoadScene(data.currentSceneName);
         }
     }
 
-    // Вызывается после загрузки сцены
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = scene.name;
         Debug.Log($"📱 Загружена сцена: {scene.name}");
 
-        // ФИКС: перезапускаем коллайдеры на дверях
         Invoke(nameof(FixAllDoorColliders), 0.05f);
+
+        // УПРАВЛЕНИЕ МАГОМ: показываем во всех сценах, где есть диалоги
+        if (currentStepIndex < storySequence.Count)
+        {
+            ShowMagInScene(scene.name);
+        }
+        else
+        {
+            HideMagInCurrentScene();
+        }
 
         if (isLoadingGame)
         {
@@ -137,7 +135,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Вызывается триггерами
     public void ReportTrigger(string triggerID)
     {
         if (currentStepIndex < storySequence.Count)
@@ -148,11 +145,8 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log($"✅ Шаг {currentStepIndex + 1}/{storySequence.Count} выполнен: {triggerID}");
                 currentStepIndex++;
-
-                // Автоматически сохраняем прогресс
                 AutoSave();
 
-                // Активируем следующий триггер
                 if (currentStepIndex < storySequence.Count)
                 {
                     DisableAllTriggersExcept(storySequence[currentStepIndex]);
@@ -160,6 +154,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     Debug.Log("🎉 Игра пройдена! Поздравляю!");
+                    HideMagInCurrentScene();
                 }
             }
             else
@@ -169,7 +164,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Автосохранение
     public void AutoSave()
     {
         GameData data = new GameData();
@@ -187,30 +181,24 @@ public class GameManager : MonoBehaviour
         SaveSystem.SaveGame(data);
     }
 
-    // Сохранение при выходе в меню
     public void SaveAndGoToMenu()
     {
         AutoSave();
         SceneManager.LoadScene("Menu");
     }
 
-    // Восстановление состояния триггеров
     void RestoreTriggersState()
     {
-        // Отключаем ВСЕ триггеры, КРОМЕ ДВЕРЕЙ
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
         foreach (var trigger in allTriggers)
         {
-            // Пропускаем двери (не отключаем их)
             if (trigger.CompareTag("Door"))
             {
-                Debug.Log($"🚪 Дверь '{trigger.triggerID}' пропущена (не отключаем)");
                 continue;
             }
             trigger.gameObject.SetActive(false);
         }
 
-        // Включаем следующий квестовый триггер
         if (currentStepIndex < storySequence.Count)
         {
             string nextTriggerID = storySequence[currentStepIndex];
@@ -218,7 +206,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Восстановление позиции игрока
     void RestorePlayerPosition()
     {
         GameData data = SaveSystem.LoadGame();
@@ -240,14 +227,11 @@ public class GameManager : MonoBehaviour
 
         foreach (var trigger in allTriggers)
         {
-            // ПРОВЕРКА НА ДВЕРЬ - не отключаем двери!
             if (trigger.CompareTag("Door"))
             {
-                Debug.Log($"🚪 Дверь '{trigger.triggerID}' пропущена, остаётся активной");
-                continue; // пропускаем, ничего не делаем с дверью
+                continue;
             }
 
-            // Обычные квестовые триггеры
             if (trigger.triggerID == activeTriggerID)
             {
                 trigger.gameObject.SetActive(true);
@@ -297,5 +281,48 @@ public class GameManager : MonoBehaviour
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // ========== УПРАВЛЕНИЕ МАГОМ ==========
+
+    public void ShowMagInScene(string sceneName)
+    {
+        HideMagInAllScenes();
+
+        GameObject mag = GameObject.FindGameObjectWithTag("Mag");
+
+        if (mag != null)
+        {
+            mag.SetActive(true);
+            currentMagObject = mag;
+            currentMagScene = sceneName;
+            Debug.Log($"✨ Маг появился в сцене: {sceneName}");
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Маг с тегом 'Mag' не найден в сцене {sceneName}");
+        }
+    }
+
+    public void HideMagInCurrentScene()
+    {
+        if (currentMagObject != null)
+        {
+            currentMagObject.SetActive(false);
+            Debug.Log($"😴 Маг скрыт в сцене: {currentMagScene}");
+            currentMagObject = null;
+        }
+    }
+
+    void HideMagInAllScenes()
+    {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>(true);
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.CompareTag("Mag"))
+            {
+                obj.SetActive(false);
+            }
+        }
     }
 }

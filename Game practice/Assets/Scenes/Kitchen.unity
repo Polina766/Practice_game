@@ -4761,11 +4761,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
---- !u!50 &2192165737370580323 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 8669154632640555134, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
-  m_PrefabInstance: {fileID: 2192165737370580322}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2192165737370580324 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
@@ -4849,10 +4844,6 @@ PrefabInstance:
       propertyPath: playerAnimator
       value: 
       objectReference: {fileID: 463103172}
-    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
-      propertyPath: playerRigidbody
-      value: 
-      objectReference: {fileID: 2192165737370580323}
     - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
       propertyPath: playerController
       value: 

@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RoomMag.unity
     guid: 4330b45f809c0a04c85274bdefa10fe7
   - enabled: 1
+    path: "Assets/Scenes/\u043F\u043E\u0434\u0432\u0430\u043B.unity"
+    guid: 395410225d43d6d4ea9c42fd67f56655
+  - enabled: 1
     path: "Assets/Scripts/\u0434\u043B\u044F \u0433\u043E\u043B\u043E\u0432\u043E\u043B\u043E\u043C\u043E\u043A/CardGame/CardGame.unity"
     guid: 7919585ee68fc9a449a3ee890ace2fdd
   m_configObjects:

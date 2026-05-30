@@ -2,37 +2,44 @@ using UnityEngine;
 
 public class GameManagerPuzzle : MonoBehaviour
 {
+    [Header("UI")]
     public GameObject winButton; // Крестик (кнопка)
     public GameObject puzzleContainer; // Контейнер со всей головоломкой
-    public string playerTag = "Player"; // Тег игрока
+
+    [Header("Игрок")]
+    public PlayerController playerController; // Перетащите сюда PlayerController
+    public Animator playerAnimator; // Перетащите сюда Animator игрока
+
+    [Header("Quest Trigger (опционально)")]
+    public QuestStepTrigger questTrigger; // Перетащите сюда QuestStepTrigger для уведомления
+
+    [Header("Настройки")]
+    public string playerTag = "Player";
 
     private int totalPieces = 25;
     private int piecesInPlace = 0;
-    private bool isPuzzleActive = false; // Активна ли головоломка
+    private bool isPuzzleActive = false;
     private MovePuzzle[] allPieces;
     private PuzzleSlot[] allSlots;
+    private bool puzzleCompleted = false;
 
     void Start()
     {
-        // Крестик скрыт в начале
         if (winButton != null)
             winButton.SetActive(false);
 
-        // Головоломка скрыта до входа в триггер
         if (puzzleContainer != null)
             puzzleContainer.SetActive(false);
 
-        // Находим все пазлы и слоты (они есть, но скрыты)
         allPieces = FindObjectsOfType<MovePuzzle>();
         allSlots = FindObjectsOfType<PuzzleSlot>();
 
         Debug.Log("Головоломка готова. Ожидаем входа в триггер...");
     }
 
-    // Вход в триггер
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(playerTag) && !isPuzzleActive)
+        if (other.CompareTag(playerTag) && !isPuzzleActive && !puzzleCompleted)
         {
             ActivatePuzzle();
         }
@@ -42,6 +49,9 @@ public class GameManagerPuzzle : MonoBehaviour
     {
         isPuzzleActive = true;
         Debug.Log("🎮 Игрок вошёл в триггер! Включаем головоломку!");
+
+        // 🔒 БЛОКИРУЕМ ИГРОКА
+        LockPlayer();
 
         // Показываем головоломку
         if (puzzleContainer != null)
@@ -69,7 +79,40 @@ public class GameManagerPuzzle : MonoBehaviour
             winButton.SetActive(false);
     }
 
-    // Этот метод вызывает каждый пазл, когда его поставили в слот
+    // Блокировка игрока
+    void LockPlayer()
+    {
+        if (playerController != null)
+        {
+            // Убираем стрелочку
+            playerController.CancelMoveIndicator();
+
+            // Останавливаем всё движение
+            playerController.StopAllMovement();
+
+            // Отключаем управление
+            playerController.enabled = false;
+
+            Debug.Log("🔒 Игрок ЗАБЛОКИРОВАН (головоломка)");
+        }
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetFloat("Speed", 0f);
+            playerAnimator.Play("Idle");
+        }
+    }
+
+    // Разблокировка игрока
+    void UnlockPlayer()
+    {
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+            Debug.Log("🔓 Игрок РАЗБЛОКИРОВАН (головоломка закрыта)");
+        }
+    }
+
     public void CheckPiecePlaced(int pieceIndex, int slotIndex)
     {
         if (!isPuzzleActive) return;
@@ -86,7 +129,6 @@ public class GameManagerPuzzle : MonoBehaviour
         }
     }
 
-    // Этот метод вызывает каждый пазл, когда его убрали со слота
     public void CheckPieceRemoved(int pieceIndex, int slotIndex)
     {
         if (!isPuzzleActive) return;
@@ -101,6 +143,14 @@ public class GameManagerPuzzle : MonoBehaviour
     void Win()
     {
         Debug.Log("🏆 ПОБЕДА! Все 25 пазлов на своих местах! 🏆");
+        puzzleCompleted = true;
+
+        // Уведомляем GameManager (если есть QuestTrigger)
+        if (questTrigger != null)
+        {
+            questTrigger.NotifyManually();
+            Debug.Log($"✅ Уведомлён GameManager: {questTrigger.triggerID}");
+        }
 
         if (winButton != null)
         {
@@ -125,5 +175,8 @@ public class GameManagerPuzzle : MonoBehaviour
         }
 
         isPuzzleActive = false;
+
+        // 🔓 РАЗБЛОКИРУЕМ ИГРОКА
+        UnlockPlayer();
     }
 }

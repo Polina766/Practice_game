@@ -293,6 +293,7 @@ MonoBehaviour:
   - ...
   - "The room felt they weren\u2019t done talking."
   dialogueManager: {fileID: 3306319535101288233}
+  questTrigger: {fileID: 36821702}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &36821700
@@ -369,6 +370,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d3
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1 &122588681
 GameObject:
@@ -2245,6 +2248,7 @@ MonoBehaviour:
   - ...
   - Thanks
   dialogueManager: {fileID: 3306319535101288233}
+  questTrigger: {fileID: 1408234653}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &1408234651
@@ -2321,6 +2325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d5
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1 &1426306010
 GameObject:
@@ -2866,6 +2872,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: p1
+  triggerOnExit: 0
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!114 &1555889076 stripped
 MonoBehaviour:
@@ -3642,6 +3650,7 @@ GameObject:
   - component: {fileID: 1836027891}
   - component: {fileID: 1836027890}
   - component: {fileID: 1836027892}
+  - component: {fileID: 1836027893}
   m_Layer: 0
   m_Name: PuzzleManager
   m_TagString: Untagged
@@ -3674,7 +3683,6 @@ MonoBehaviour:
   selectedScale: {x: 1.2, y: 1.2}
   normalScale: {x: 1, y: 1}
   correctSlots: 00000000020000000500000006000000
-  closeButton: {fileID: 6271046644002236127}
   puzzlePanel: {fileID: 1157720803}
   player: {fileID: 1841427221}
   pauseManager: {fileID: 1555889076}
@@ -3682,6 +3690,7 @@ MonoBehaviour:
   activateOnRightClick: 1
   activationRange: 3
   activationKey: 324
+  questTrigger: {fileID: 1836027893}
 --- !u!4 &1836027891
 Transform:
   m_ObjectHideFlags: 0
@@ -3727,7 +3736,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -3743,6 +3752,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 3.8550253}
   m_EdgeRadius: 0
+--- !u!114 &1836027893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836027889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e11c3837f22ac442aca1112f564c383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
+  triggerID: p2
+  triggerOnExit: 0
+  manualOnly: 1
+  delayBeforeReport: 0
 --- !u!1 &1841427221 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 510760266210446500, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
@@ -4736,6 +4761,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+--- !u!50 &2192165737370580323 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 8669154632640555134, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2192165737370580324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841427221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c652883f26e2d4eabea86a6cf1c66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!1 &2305009042069101866
 GameObject:
   m_ObjectHideFlags: 0
@@ -4804,10 +4845,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dialogue
       objectReference: {fileID: 0}
-    - target: {fileID: 669100960945638889, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerAnimator
+      value: 
+      objectReference: {fileID: 463103172}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerRigidbody
+      value: 
+      objectReference: {fileID: 2192165737370580323}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 2192165737370580324}
     - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4961,6 +5010,7 @@ MonoBehaviour:
   - And if I do get tangled?
   - "Then you\u2019ll officially become my student. "
   dialogueManager: {fileID: 3306319535101288233}
+  questTrigger: {fileID: 9104047772073064823}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!60 &4118812566896544855
@@ -5821,6 +5871,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d2
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

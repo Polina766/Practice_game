@@ -96,6 +96,9 @@ public class GameManager : MonoBehaviour
         currentSceneName = scene.name;
         Debug.Log($"📱 Загружена сцена: {scene.name}");
 
+        // 🔥 ВКЛЮЧАЕМ ВСЕ ДВЕРИ ПРИ ЗАГРУЗКЕ СЦЕНЫ
+        EnableAllDoors();
+
         Invoke(nameof(FixAllDoorColliders), 0.05f);
 
         // УПРАВЛЕНИЕ МАГОМ: показываем во всех сценах, где есть диалоги
@@ -189,6 +192,9 @@ public class GameManager : MonoBehaviour
 
     void RestoreTriggersState()
     {
+        // Сначала включаем все двери
+        EnableAllDoors();
+
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
         foreach (var trigger in allTriggers)
         {
@@ -222,6 +228,9 @@ public class GameManager : MonoBehaviour
 
     void DisableAllTriggersExcept(string activeTriggerID)
     {
+        // 🔥 СНАЧАЛА ВКЛЮЧАЕМ ВСЕ ДВЕРИ
+        EnableAllDoors();
+
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
         int enabledCount = 0;
 
@@ -247,6 +256,39 @@ public class GameManager : MonoBehaviour
         if (enabledCount == 0 && activeTriggerID != "GameComplete")
         {
             Debug.LogWarning($"⚠️ Триггер с ID '{activeTriggerID}' не найден в этой сцене!");
+        }
+    }
+
+    // 🆕 МЕТОД ДЛЯ ВКЛЮЧЕНИЯ ДВЕРЕЙ
+    void EnableAllDoors()
+    {
+        GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
+
+        if (doors.Length == 0)
+        {
+            // Не выводим предупреждение, просто в этой сцене нет дверей
+            return;
+        }
+
+        Debug.Log($"🚪 Найдено дверей для включения: {doors.Length}");
+
+        foreach (GameObject door in doors)
+        {
+            // Включаем сам объект
+            if (!door.activeSelf)
+                door.SetActive(true);
+
+            // Включаем коллайдер
+            Collider2D col = door.GetComponent<Collider2D>();
+            if (col != null && !col.enabled)
+                col.enabled = true;
+
+            // Включаем скрипт Door
+            Door doorScript = door.GetComponent<Door>();
+            if (doorScript != null && !doorScript.enabled)
+                doorScript.enabled = true;
+
+            Debug.Log($"🚪 Дверь '{door.name}' принудительно включена");
         }
     }
 
@@ -321,6 +363,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError($"❌ Маг с тегом 'Mag' не найден в сцене {sceneName}!");
         }
     }
+
     public void HideMagInCurrentScene()
     {
         if (currentMagObject != null)

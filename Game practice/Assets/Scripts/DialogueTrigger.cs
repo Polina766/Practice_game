@@ -1,34 +1,34 @@
 using UnityEngine;
+using System.Collections;
 
 public class DialogueTrigger : MonoBehaviour
 {
     [Header("Диалог")]
-    [Tooltip("Имена персонажей в том же порядке, что и реплики")]
     public string[] speakerNames;
-
-    [Tooltip("Текст реплик в том же порядке")]
     public string[] dialogueLines;
 
+    [Header("Ссылки")]
     public DialogueManager dialogueManager;
+    public QuestStepTrigger questTrigger;  // ← ДОБАВИТЬ! Перетащите сюда QuestStepTrigger
 
     [Header("Настройки повтора")]
-    [Tooltip("Можно ли проиграть диалог только один раз?")]
-    public bool playOnlyOnce = true;  // Ставим true по умолчанию
+    public bool playOnlyOnce = true;
+    public bool destroyAfterDialogue = true;
 
-    [Tooltip("Автоматически уничтожить объект триггера после диалога?")]
-    public bool destroyAfterDialogue = true;  // Уничтожит объект с NPC/триггером
-
-    private bool hasBeenPlayed = false;  // Был ли диалог уже проигран
+    private bool hasBeenPlayed = false;
 
     void Start()
     {
         if (dialogueManager == null)
             dialogueManager = FindAnyObjectByType<DialogueManager>();
+
+        // Если questTrigger не назначен - пробуем найти
+        if (questTrigger == null)
+            questTrigger = GetComponent<QuestStepTrigger>();
     }
 
     public void TriggerDialogue()
     {
-        // Если диалог уже был проигран и нужно только один раз - выходим
         if (playOnlyOnce && hasBeenPlayed)
         {
             Debug.Log("Диалог уже был проигран и не повторится");
@@ -37,57 +37,60 @@ public class DialogueTrigger : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            hasBeenPlayed = true;  // Отмечаем как проигранный
+            hasBeenPlayed = true;
             dialogueManager.StartDialogue(speakerNames, dialogueLines);
 
-            // После завершения диалога удаляем объект (если нужно)
-            if (destroyAfterDialogue)
-            {
-                // Подписываемся на событие окончания диалога
-                StartCoroutine(WaitAndDestroy());
-            }
-            else
-            {
-                // Просто отключаем триггер, но объект остаётся
-                Collider2D col = GetComponent<Collider2D>();
-                if (col != null) col.enabled = false;
-            }
+            // Запускаем корутину для ожидания окончания диалога
+            StartCoroutine(WaitForDialogueEnd());
         }
     }
 
-    private System.Collections.IEnumerator WaitAndDestroy()
+    // Корутина, которая ждёт окончания диалога и отправляет уведомление
+    IEnumerator WaitForDialogueEnd()
     {
-        // Ждём, пока диалог закончится
-        while (dialogueManager.isActiveAndEnabled && dialogueManager.gameObject.activeSelf)
+        // Ждём, пока диалог активен
+        while (dialogueManager != null && dialogueManager.gameObject.activeSelf)
         {
             yield return null;
         }
 
-        // Немного задержки для красоты
+        // Небольшая задержка после закрытия диалога
         yield return new WaitForSeconds(0.1f);
 
-        // Уничтожаем объект с триггером (NPC, зона диалога)
-        Destroy(gameObject);
+        // 🔥 ОТПРАВЛЯЕМ УВЕДОМЛЕНИЕ В GAMEMANAGER
+        if (questTrigger != null)
+        {
+            questTrigger.NotifyManually();
+            Debug.Log($"✅ Диалог завершён, уведомлён GameManager: {questTrigger.triggerID}");
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ QuestStepTrigger не найден для отправки уведомления");
+        }
+
+        // Уничтожаем объект после диалога (если нужно)
+        if (destroyAfterDialogue)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Destroy(gameObject);
+        }
+        else if (playOnlyOnce)
+        {
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null) col.enabled = false;
+        }
     }
 
-    // Запуск диалога при нажатии на NPC мышкой
     void OnMouseDown()
     {
         TriggerDialogue();
     }
 
-    // Запуск диалога при входе в триггер-зону
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             TriggerDialogue();
-
-            // Отключаем коллайдер, чтобы диалог не запускался снова (если не уничтожаем объект)
-            if (!destroyAfterDialogue && playOnlyOnce)
-            {
-                GetComponent<Collider2D>().enabled = false;
-            }
         }
     }
 }

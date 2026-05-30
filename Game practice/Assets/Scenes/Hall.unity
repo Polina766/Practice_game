@@ -1427,6 +1427,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+--- !u!114 &2192165737370580323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841427221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c652883f26e2d4eabea86a6cf1c66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+--- !u!50 &2192165737370580324 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 8669154632640555134, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2526832943507926275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,6 +1773,7 @@ MonoBehaviour:
   - "I was told training, knowledge, power\u2026 "
   - " You want to learn? Then don\u2019t ask. Start with my mistake."
   dialogueManager: {fileID: 1715406991}
+  questTrigger: {fileID: 7362330039151613663}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!1001 &5521045220755536936
@@ -1828,6 +1845,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dialogue
       objectReference: {fileID: 0}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerAnimator
+      value: 
+      objectReference: {fileID: 463103172}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerRigidbody
+      value: 
+      objectReference: {fileID: 2192165737370580324}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 2192165737370580323}
     - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2089,6 +2118,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d1
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1001 &7715183608317521828
 PrefabInstance:

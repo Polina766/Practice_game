@@ -3657,8 +3657,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 669100960945638889, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerAnimator
+      value: 
+      objectReference: {fileID: 463103172}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerRigidbody
+      value: 
+      objectReference: {fileID: 2192165737370580323}
+    - target: {fileID: 6342647959951713434, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 2192165737370580324}
     - target: {fileID: 6540505475152289640, guid: 1ca812d4544fac2428e5dd2d9ddb2a2c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4517,6 +4529,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManagerPuzzle
   winButton: {fileID: 83563453}
   puzzleContainer: {fileID: 1971097364}
+  playerController: {fileID: 2192165737370580324}
+  playerAnimator: {fileID: 463103172}
+  questTrigger: {fileID: 1179312751}
   playerTag: Player
 --- !u!4 &1179312749
 Transform:
@@ -4592,6 +4607,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: p4
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1 &1303425320
 GameObject:
@@ -5889,6 +5906,7 @@ MonoBehaviour:
   - She agrees too
   - "\u2026Traitor"
   dialogueManager: {fileID: 991258583}
+  questTrigger: {fileID: 1792019123}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &1792019121
@@ -5946,7 +5964,7 @@ Transform:
   m_GameObject: {fileID: 1792019119}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.08, y: 1.28, z: 0}
+  m_LocalPosition: {x: -10.9, y: 1.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5965,6 +5983,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d11
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!1 &1800350359
 GameObject:
@@ -7542,7 +7562,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 247032649
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3075533741140245468, guid: e1bb0b3900c9d5445a5af228558012cd, type: 3}
@@ -7810,7 +7830,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 902771029
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
@@ -8066,6 +8086,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+--- !u!50 &2192165737370580323 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 8669154632640555134, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2192165737370580324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2833473864335126068, guid: 8d7f76652334f3d4a9b66fc2fcc2e8ef, type: 3}
+  m_PrefabInstance: {fileID: 2192165737370580322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841427221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c652883f26e2d4eabea86a6cf1c66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!4 &2282645233516085504
 Transform:
   m_ObjectHideFlags: 0
@@ -8187,6 +8223,7 @@ MonoBehaviour:
   - "You\u2019re imagining things. They don\u2019t look at everyone like that"
   - "There\u2019s stuff scattered on the bed?"
   dialogueManager: {fileID: 991258583}
+  questTrigger: {fileID: 8078320707207600449}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!4 &4487254600273074986
@@ -8654,6 +8691,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: portal
+  triggerOnExit: 0
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!61 &8078320707207600448
 BoxCollider2D:
@@ -8714,6 +8753,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d10
+  triggerOnExit: 1
+  manualOnly: 0
   delayBeforeReport: 0
 --- !u!4 &8120605674769564814
 Transform:

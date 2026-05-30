@@ -131,6 +131,9 @@ MonoBehaviour:
   dialogueText: {fileID: 8562816407131842234}
   continuePrompt: {fileID: 8774658494504097311}
   typingSpeed: 0.045
+  playerController: {fileID: 0}
+  playerRigidbody: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!1 &778256076265698223
 GameObject:
   m_ObjectHideFlags: 0

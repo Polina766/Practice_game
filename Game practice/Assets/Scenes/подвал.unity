@@ -182,7 +182,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -464239705
-  m_SortingLayer: 4
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3608613013245950664, guid: 8f469922e540c7b45a9ef630ba81bc26, type: 3}
@@ -256,8 +256,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 110.9, y: -621.1}
-  m_SizeDelta: {x: 933, y: 30}
+  m_AnchoredPosition: {x: 0, y: -621.1}
+  m_SizeDelta: {x: 1294, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &489160851
 MonoBehaviour:
@@ -377,8 +377,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 110.9, y: -685.2}
-  m_SizeDelta: {x: 933, y: 30}
+  m_AnchoredPosition: {x: 0, y: -685.2}
+  m_SizeDelta: {x: 1294, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505110429
 MonoBehaviour:
@@ -922,8 +922,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 110.9, y: -556.1}
-  m_SizeDelta: {x: 933, y: 30}
+  m_AnchoredPosition: {x: 0, y: -556.1}
+  m_SizeDelta: {x: 1294, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &811932628
 MonoBehaviour:
@@ -1405,7 +1405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1494256463
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2253,8 +2253,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.2759, y: -648.858}
-  m_SizeDelta: {x: 2517.4622, y: 71.7205}
+  m_AnchoredPosition: {x: 354.4563, y: -638.96}
+  m_SizeDelta: {x: 1829.1013, y: 90.18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1737543902428825089
 Transform:
@@ -2265,7 +2265,7 @@ Transform:
   m_GameObject: {fileID: 4958950834226064327}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.05, y: 1.52, z: 0}
+  m_LocalPosition: {x: 3.97, y: 1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2963,7 +2963,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 902771029
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
@@ -3522,8 +3522,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: DogDialogue
-  triggerOnExit: 1
-  manualOnly: 0
+  triggerOnExit: 0
+  manualOnly: 1
   delayBeforeReport: 0
 --- !u!114 &7956678442700216760
 MonoBehaviour:
@@ -3537,7 +3537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0fd40bfea2e894392fc6154e7a506d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DogDialogueManager
-  dialoguePanel: {fileID: 190756551308624700}
+  dialoguePanel: {fileID: 669100961162149284}
   speakerText: {fileID: 2626875819478776131}
   dialogueText: {fileID: 8562816407182661367}
   optionsPanel: {fileID: 1494256462}
@@ -3613,7 +3613,7 @@ MonoBehaviour:
     optionTexts:
     - The mag doesn't have to explain
     - Explanations later. The bone too
-    - First let's figure this out, then the old man will bring bones
+    - Let's figure this out first; then the old man will bring bones
     correctOptions: 000001
   - speakerNames:
     - Personality A
@@ -3630,7 +3630,7 @@ MonoBehaviour:
     - "We\u2026 think you're not an enemy"
     - Not an enemy. But not really one of us either
     optionTexts:
-    - I want to try to help you. Even if it doesn't work right away
+    - I'll try to help, even if it doesn't work at first.
     - Then stay in the basement
     - You're good. Just confused
     correctOptions: 010001
@@ -3811,7 +3811,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 396.05707, y: -63.192844, z: 10.35083, w: 2.7272263}
+  m_margin: {x: 3.1448975, y: -52.56651, z: 10.35083, w: 2.7272263}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3898,7 +3898,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 247032649
-  m_SortingLayer: 1
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3075533741140245468, guid: e1bb0b3900c9d5445a5af228558012cd, type: 3}

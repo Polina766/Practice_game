@@ -2565,7 +2565,7 @@ MonoBehaviour:
   - "\u2026Seriously?"
   - ' I love straightforward instructions.'
   dialogueManager: {fileID: 1137868402286140931}
-  questTrigger: {fileID: 0}
+  questTrigger: {fileID: 853199014}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &853199012
@@ -2623,7 +2623,7 @@ Transform:
   m_GameObject: {fileID: 853199010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.3, y: 1.21, z: 0}
+  m_LocalPosition: {x: -4.09, y: 1.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2642,7 +2642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d7
-  triggerOnExit: 0
+  triggerOnExit: 1
   manualOnly: 0
   delayBeforeReport: 0
 --- !u!224 &895629937
@@ -4669,7 +4669,7 @@ Transform:
   m_GameObject: {fileID: 1998795389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.56, y: 2.63, z: 0}
+  m_LocalPosition: {x: -3.99, y: 2.63, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4798,7 +4798,7 @@ MonoBehaviour:
   - Try to figure it out
   - "If they start talking to me \u2014 I\u2019m leaving."
   dialogueManager: {fileID: 1137868402286140931}
-  questTrigger: {fileID: 0}
+  questTrigger: {fileID: 2055335115}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &2055335113
@@ -4875,7 +4875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d6
-  triggerOnExit: 0
+  triggerOnExit: 1
   manualOnly: 0
   delayBeforeReport: 0
 --- !u!1001 &2086894224
@@ -6264,7 +6264,7 @@ MonoBehaviour:
   - I was hoping.
   - Bad habit.
   dialogueManager: {fileID: 1137868402286140931}
-  questTrigger: {fileID: 0}
+  questTrigger: {fileID: 8089161582215110024}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!1 &6675804777982274990
@@ -6546,7 +6546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestStepTrigger
   triggerID: d4
-  triggerOnExit: 0
+  triggerOnExit: 1
   manualOnly: 0
   delayBeforeReport: 0
 --- !u!60 &8363669213662235725

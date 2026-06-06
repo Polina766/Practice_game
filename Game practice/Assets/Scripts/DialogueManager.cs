@@ -15,14 +15,15 @@ public class DialogueManager : MonoBehaviour
     public float typingSpeed = 0.05f;
 
     [Header("Игрок")]
-    public PlayerController playerController;  // Перетащите сюда PlayerController
-    public Animator playerAnimator;            // Перетащите сюда Animator игрока
+    public PlayerController playerController;
+    public Animator playerAnimator;
 
     private Queue<string> sentences;
     private Queue<string> speakers;
-    private string currentSentence = "";
+    private bool isDialogueActive = false;
     private bool isTyping = false;
-    private bool cancelTyping = false;
+    private bool waitingForNext = false;
+    private string fullText = "";
 
     void Start()
     {
@@ -33,14 +34,20 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string[] speakerNames, string[] dialogueLines)
     {
+        if (DogDialogueManager.isDogDialogueActive) return;
+
         if (speakerNames.Length != dialogueLines.Length)
         {
             Debug.LogError("Количество имён и строк не совпадает!");
             return;
         }
 
+        isDialogueActive = true;
+        waitingForNext = false;
         gameObject.SetActive(true);
-        continuePrompt.SetActive(false);
+
+        if (continuePrompt != null)
+            continuePrompt.SetActive(false);
 
         sentences.Clear();
         speakers.Clear();
@@ -51,28 +58,17 @@ public class DialogueManager : MonoBehaviour
             sentences.Enqueue(dialogueLines[i]);
         }
 
-        // 🔒 ПОЛНАЯ ОСТАНОВКА ИГРОКА
-        LockPlayerCompletely();
-
-        DisplayNextSentence();
+        LockPlayer();
+        ShowCurrentLine();
     }
 
-    public void DisplayNextSentence()
+    void ShowCurrentLine()
     {
-        if (isTyping)
-        {
-            cancelTyping = true;
-            return;
-        }
-
         if (sentences.Count > 0)
         {
-            string nextSpeaker = speakers.Dequeue();
-            string nextSentence = sentences.Dequeue();
-
-            nameText.text = nextSpeaker;
-            StopAllCoroutines();
-            StartCoroutine(TypeSentence(nextSentence));
+            nameText.text = speakers.Dequeue();
+            fullText = sentences.Dequeue();
+            StartCoroutine(TypeText());
         }
         else
         {
@@ -80,80 +76,84 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    IEnumerator TypeSentence(string sentence)
+    IEnumerator TypeText()
     {
         isTyping = true;
-        cancelTyping = false;
-        currentSentence = sentence;
+        waitingForNext = false;
         dialogueText.text = "";
 
-        foreach (char letter in sentence.ToCharArray())
+        if (continuePrompt != null)
+            continuePrompt.SetActive(false);
+
+        foreach (char letter in fullText.ToCharArray())
         {
-            if (cancelTyping)
-            {
-                dialogueText.text = sentence;
-                break;
-            }
             dialogueText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
 
         isTyping = false;
+        waitingForNext = true;
+
         if (continuePrompt != null)
             continuePrompt.SetActive(true);
     }
 
     void EndDialogue()
     {
+        isDialogueActive = false;
+        waitingForNext = false;
         gameObject.SetActive(false);
-
-        // 🔓 ВОЗВРАЩАЕМ УПРАВЛЕНИЕ ИГРОКУ
-        UnlockPlayerCompletely();
+        UnlockPlayer();
     }
 
-    void LockPlayerCompletely()
+    void LockPlayer()
     {
         if (playerController != null)
         {
-            // 1. Убираем стрелочку
             playerController.CancelMoveIndicator();
-
-            // 2. Полностью останавливаем движение
             playerController.StopAllMovement();
-
-            // 3. Отключаем возможность двигаться
             playerController.enabled = false;
-
-            Debug.Log("🔒 Игрок ПОЛНОСТЬЮ заблокирован (движение, стрелочка, управление)");
         }
-
-        // Ставим анимацию Idle
         if (playerAnimator != null)
         {
             playerAnimator.SetFloat("Speed", 0f);
-            playerAnimator.Play("Idle");
         }
     }
 
-    void UnlockPlayerCompletely()
+    void UnlockPlayer()
     {
         if (playerController != null)
         {
-            // Включаем управление обратно
             playerController.enabled = true;
-
-            Debug.Log("🔓 Игрок разблокирован (управление восстановлено)");
         }
     }
 
     void Update()
     {
-        if (gameObject.activeSelf && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(1)))
-        {
-            if (!isTyping && continuePrompt != null)
-                continuePrompt.SetActive(false);
+        if (DogDialogueManager.isDogDialogueActive) return;
+        if (!isDialogueActive) return;
 
-            DisplayNextSentence();
+        // Проверка нажатия пробел или правой кнопки мыши
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(1))
+        {
+            // Если текст печатается - показываем весь сразу
+            if (isTyping)
+            {
+                StopAllCoroutines();
+                dialogueText.text = fullText;
+                isTyping = false;
+                waitingForNext = true;
+                if (continuePrompt != null)
+                    continuePrompt.SetActive(true);
+            }
+            // Если текст напечатан - переходим к следующей строке
+            else if (waitingForNext)
+            {
+                waitingForNext = false;
+                if (continuePrompt != null)
+                    continuePrompt.SetActive(false);
+                ShowCurrentLine();
+            }
         }
     }
 }

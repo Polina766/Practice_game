@@ -6,6 +6,8 @@ using TMPro;
 
 public class DogDialogueManager : MonoBehaviour
 {
+    public static bool isDogDialogueActive = false;
+
     [Header("UI Elements")]
     public GameObject dialoguePanel;
     public TextMeshProUGUI speakerText;
@@ -24,34 +26,52 @@ public class DogDialogueManager : MonoBehaviour
     public float typingSpeed = 0.05f;
 
     [Header("Success Threshold")]
-    public int successThreshold = 40; // Need 40% correct answers
+    public int successThreshold = 40;
 
-    // Structure for each question
     [System.Serializable]
     public class DialogueQuestion
     {
-        public string[] speakerNames;      // Who says each line (Personality A, Personality B, Player, Mag)
-        public string[] dialogueLines;     // Dialogue text lines
-        public string[] optionTexts;       // Answer options
-        public bool[] correctOptions;      // Which answer is correct (true/false)
+        public string[] speakerNames;
+        public string[] dialogueLines;
+        public string[] optionTexts;
+        public bool[] correctOptions;
     }
 
     [Header("Questions")]
     public DialogueQuestion[] questions;
 
-    private int currentQuestionIndex = 0;
-    private int currentLineIndex = 0;
     private int correctAnswersCount = 0;
-    private bool isInQuestion = false;
-    private bool isTyping = false;
-    private bool cancelTyping = false;
     private bool dialogueCompleted = false;
+
+    // Все строки диалога
+    private List<DialogueLine> allLines = new List<DialogueLine>();
+    private int currentLineIndex = 0;
+    private int currentQuestionIndex = 0;
+
+    // Состояния
+    private bool isTyping = false;
+    private bool waitingForNext = false;
+    private string currentFullText = "";
+    private string currentSpeaker = "";
+
+    // Флаги
+    private bool isInQuestions = false;
+    private bool isShowingOptions = false;
+    private int selectedQuestionIndex = -1;
+
+    private class DialogueLine
+    {
+        public string speaker;
+        public string text;
+        public bool isQuestion;  // true если после этой строки нужно показать кнопки
+        public string[] optionTexts;
+        public bool[] correctOptions;
+    }
 
     void Start()
     {
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
-
         if (optionsPanel != null)
             optionsPanel.SetActive(false);
     }
@@ -59,207 +79,226 @@ public class DogDialogueManager : MonoBehaviour
     public void StartDialogue()
     {
         Debug.Log("🐕 Dog dialogue started");
+        isDogDialogueActive = true;
 
-        // Lock player
         LockPlayer();
 
-        dialogueCompleted = false;
-        currentQuestionIndex = 0;
-        correctAnswersCount = 0;
-
         dialoguePanel.SetActive(true);
-        StartCoroutine(PlayDialogue());
+        correctAnswersCount = 0;
+        currentQuestionIndex = 0;
+        currentLineIndex = 0;
+        isInQuestions = false;
+        isShowingOptions = false;
+
+        // Строим все строки
+        BuildAllLines();
+
+        // Показываем первую строку
+        ShowCurrentLine();
     }
 
-    IEnumerator PlayDialogue()
+    void BuildAllLines()
     {
-        // Introduction lines (Mag and Player)
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— Once, this was supposed to be a simple spell."));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— To create an assistant. Someone who understands without explanation."));
-        yield return StartCoroutine(ShowDialogueLine("Player", "— So what went wrong?"));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— He understood everything…"));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— …but decided he had his own opinion."));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— I tried to negotiate."));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— To explain why he exists."));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— Why he should obey."));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— Turns out, sentient beings don't respond well to orders.", true));
-        yield return StartCoroutine(ShowDialogueLine("Player", "— And you locked him up?"));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— I called it a \"temporary solution.\""));
-        yield return StartCoroutine(ShowDialogueLine("Mag", "— It's been going on for several years."));
+        allLines.Clear();
 
-        // Go through all questions
+        // Вступительные строки
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Once, this was supposed to be a simple spell.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "To create an assistant. Someone who understands without explanation.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "So what went wrong?", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "He understood everything…", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "…but decided he had his own opinion.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "I tried to negotiate.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "To explain why he exists.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Why he should obey.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Turns out, sentient beings don't respond well to orders.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "And you locked him up?", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "I called it a \"temporary solution.\"", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "It's been going on for several years.", isQuestion = false });
+
+        // Вопросы
         for (int i = 0; i < questions.Length; i++)
         {
-            yield return StartCoroutine(PlayQuestion(i));
-        }
+            DialogueQuestion q = questions[i];
 
-        // Check result
-        int correctPercent = (correctAnswersCount * 100) / questions.Length;
-        Debug.Log($"🐕 Result: {correctAnswersCount}/{questions.Length} correct answers ({correctPercent}%)");
-
-        if (correctPercent >= successThreshold)
-        {
-            // SUCCESS
-            yield return StartCoroutine(ShowDialogueLine("Personality A", " That's an honest answer."));
-            yield return StartCoroutine(ShowDialogueLine("Personality B", " Honesty is a good start."));
-            yield return StartCoroutine(ShowDialogueLine("Personality A", " Maybe I was wrong."));
-            yield return StartCoroutine(ShowDialogueLine("Personality B", " Mistakes can be fixed."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " Alright. I… might have been too harsh."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " I don't like admitting mistakes.", true));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " But they happen. Even to me."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " You did well. Not perfect. But better than me."));
-            yield return StartCoroutine(ShowDialogueLine("Player", " He really eats flowers."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " Therapy. Cheap and eco-friendly."));
-            yield return StartCoroutine(ShowDialogueLine("Player", " Are you… happy?"));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " Don't start. It's temporary.", true));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " You did well. Not perfect. But you did well. You deserve to become my apprentice."));
-            yield return StartCoroutine(ShowDialogueLine("Player", " You doubted?"));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " I won't admit it."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " Let's go clean up the mess in the kitchen."));
-            yield return StartCoroutine(ShowDialogueLine("Player", " Again…"));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " Don't think about slacking off. The mess isn't going anywhere."));
-
-            // Success - notify GameManager
-            if (questTrigger != null)
+            // Добавляем строки диалога вопроса
+            for (int j = 0; j < q.speakerNames.Length; j++)
             {
-                questTrigger.NotifyManually();
+                allLines.Add(new DialogueLine
+                {
+                    speaker = q.speakerNames[j],
+                    text = q.dialogueLines[j],
+                    isQuestion = false
+                });
             }
-        }
-        else
-        {
-            // FAIL - restart
-            yield return StartCoroutine(ShowDialogueLine("Personality A", " No."));
-            yield return StartCoroutine(ShowDialogueLine("Personality B", " I don't believe you."));
-            yield return StartCoroutine(ShowDialogueLine("Player", " Alright, let's try again."));
-            yield return StartCoroutine(ShowDialogueLine("Mag", " I told you they're stubborn."));
 
-            // Don't notify GameManager, game continues
+            // Добавляем специальную строку-маркер для показа кнопок
+            allLines.Add(new DialogueLine
+            {
+                speaker = "",
+                text = "",
+                isQuestion = true,
+                optionTexts = q.optionTexts,
+                correctOptions = q.correctOptions
+            });
         }
 
-        EndDialogue();
+        // Финальные строки (успех)
+        allLines.Add(new DialogueLine { speaker = "Personality A", text = "That's an honest answer.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Personality B", text = "Honesty is a good start.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Personality A", text = "Maybe I was wrong.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Personality B", text = "Mistakes can be fixed.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Alright. I… might have been too harsh.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "I don't like admitting mistakes.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "But they happen. Even to me.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "You did well. Not perfect. But better than me.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "He really eats flowers.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Therapy. Cheap and eco-friendly.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "Are you… happy?", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Don't start. It's temporary.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "You deserve to become my apprentice.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "You doubted?", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "I won't admit it.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Let's go clean up the mess in the kitchen.", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Girl", text = "Again…", isQuestion = false });
+        allLines.Add(new DialogueLine { speaker = "Mag", text = "Don't think about slacking off.", isQuestion = false });
     }
 
-    IEnumerator PlayQuestion(int questionIndex)
+    void ShowCurrentLine()
     {
-        DialogueQuestion q = questions[questionIndex];
-        isInQuestion = true;
-
-        // Show dialogue lines before the question
-        for (int i = 0; i < q.speakerNames.Length; i++)
+        if (currentLineIndex >= allLines.Count)
         {
-            yield return StartCoroutine(ShowDialogueLine(q.speakerNames[i], q.dialogueLines[i]));
+            EndDialogue();
+            return;
         }
 
-        // Show answer options
-        yield return StartCoroutine(ShowOptions(q.optionTexts, q.correctOptions));
+        DialogueLine line = allLines[currentLineIndex];
 
-        isInQuestion = false;
-    }
+        // Если это маркер вопроса - показываем кнопки
+        if (line.isQuestion)
+        {
+            ShowOptions(line.optionTexts, line.correctOptions);
+            return;
+        }
 
-    IEnumerator ShowDialogueLine(string speaker, string line, bool isQuiet = false)
-    {
-        speakerText.text = speaker;
+        // Показываем обычную строку
+        currentSpeaker = line.speaker;
+        currentFullText = line.text;
+        speakerText.text = currentSpeaker;
         dialogueText.text = "";
 
         isTyping = true;
-        cancelTyping = false;
-
-        foreach (char letter in line.ToCharArray())
-        {
-            if (cancelTyping)
-            {
-                dialogueText.text = line;
-                break;
-            }
-            dialogueText.text += letter;
-            float speed = isQuiet ? typingSpeed * 1.5f : typingSpeed;
-            yield return new WaitForSeconds(speed);
-        }
-
-        isTyping = false;
-
-        // Show continue prompt
-        if (continuePrompt != null)
-            continuePrompt.SetActive(true);
-
-        // Wait for input
-        while (!Input.GetKeyDown(KeyCode.Space) && !Input.GetMouseButtonDown(1))
-        {
-            yield return null;
-        }
+        waitingForNext = false;
 
         if (continuePrompt != null)
             continuePrompt.SetActive(false);
 
-        cancelTyping = true;
+        StartCoroutine(TypeText());
     }
 
-    IEnumerator ShowOptions(string[] options, bool[] correctOptions)
+    IEnumerator TypeText()
     {
+        dialogueText.text = "";
+
+        foreach (char letter in currentFullText.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTyping = false;
+        waitingForNext = true;
+
+        if (continuePrompt != null)
+            continuePrompt.SetActive(true);
+    }
+
+    void ShowOptions(string[] options, bool[] correctOptions)
+    {
+        isShowingOptions = true;
+
+        // Скрываем текст
+        speakerText.gameObject.SetActive(false);
+        dialogueText.gameObject.SetActive(false);
+        if (continuePrompt != null)
+            continuePrompt.SetActive(false);
+
+        // Показываем кнопки
         optionsPanel.SetActive(true);
 
-        // Setup buttons
         for (int i = 0; i < optionButtons.Length; i++)
         {
             if (i < options.Length)
             {
                 optionButtons[i].gameObject.SetActive(true);
                 optionButtonTexts[i].text = options[i];
-                int index = i; // Closure
+                int idx = i;
                 optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => OnOptionSelected(index, correctOptions[index]));
+                optionButtons[i].onClick.AddListener(() => OnOptionSelected(idx, correctOptions[idx]));
             }
             else
             {
                 optionButtons[i].gameObject.SetActive(false);
             }
         }
-
-        // Wait for selection
-        bool selected = false;
-        while (!selected)
-        {
-            yield return null;
-        }
-
-        optionsPanel.SetActive(false);
     }
 
     void OnOptionSelected(int optionIndex, bool isCorrect)
     {
-        Debug.Log($"📝 Selected option {optionIndex + 1}, correct: {isCorrect}");
+        Debug.Log($"Option {optionIndex + 1}, correct: {isCorrect}");
 
         if (isCorrect)
-        {
             correctAnswersCount++;
-            Debug.Log($"✅ Correct! Total correct: {correctAnswersCount}");
-        }
 
-        // Show dog's reaction
-        StartCoroutine(ShowReaction(isCorrect));
+        // Скрываем кнопки
+        optionsPanel.SetActive(false);
+
+        // Показываем текст снова
+        speakerText.gameObject.SetActive(true);
+        dialogueText.gameObject.SetActive(true);
+
+        isShowingOptions = false;
+
+        // Переходим к следующей строке (реакция на выбор)
+        currentLineIndex++;
+        ShowCurrentLine();
     }
 
-    IEnumerator ShowReaction(bool isCorrect)
+    void NextLine()
     {
-        if (isCorrect)
-        {
-            yield return StartCoroutine(ShowDialogueLine("Personality A", " Hmm... that sounds reasonable.", true));
-            yield return StartCoroutine(ShowDialogueLine("Personality B", " Alright, one point for you.", true));
-        }
-        else
-        {
-            yield return StartCoroutine(ShowDialogueLine("Personality A", " No! That's not right!", true));
-            yield return StartCoroutine(ShowDialogueLine("Personality B", " You don't understand us.", true));
-        }
+        if (!waitingForNext) return;
+
+        waitingForNext = false;
+        currentLineIndex++;
+        ShowCurrentLine();
+    }
+
+    void SkipTyping()
+    {
+        if (!isTyping) return;
+
+        StopAllCoroutines();
+        dialogueText.text = currentFullText;
+        isTyping = false;
+        waitingForNext = true;
+
+        if (continuePrompt != null)
+            continuePrompt.SetActive(true);
     }
 
     void EndDialogue()
     {
+        isDogDialogueActive = false;
         dialoguePanel.SetActive(false);
         optionsPanel.SetActive(false);
-
-        // Unlock player
+        speakerText.gameObject.SetActive(true);
+        dialogueText.gameObject.SetActive(true);
         UnlockPlayer();
+
+        // Уведомляем GameManager о завершении
+        if (questTrigger != null)
+        {
+            questTrigger.NotifyManually();
+        }
 
         Debug.Log("🐕 Dog dialogue finished");
     }
@@ -272,11 +311,9 @@ public class DogDialogueManager : MonoBehaviour
             playerController.StopAllMovement();
             playerController.enabled = false;
         }
-
         if (playerAnimator != null)
         {
             playerAnimator.SetFloat("Speed", 0f);
-            playerAnimator.Play("Idle");
         }
     }
 
@@ -288,15 +325,33 @@ public class DogDialogueManager : MonoBehaviour
         }
     }
 
-    // Start dialogue from trigger
+    void Update()
+    {
+        if (!isDogDialogueActive) return;
+        if (isShowingOptions) return;
+
+        // Обработка ввода
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(1))
+        {
+            // Если текст печатается - показываем весь сразу
+            if (isTyping)
+            {
+                SkipTyping();
+            }
+            // Если текст напечатан - переходим к следующей строке
+            else if (waitingForNext)
+            {
+                NextLine();
+            }
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !dialogueCompleted)
+        if (other.CompareTag("Player") && !dialogueCompleted && !isDogDialogueActive)
         {
             StartDialogue();
             dialogueCompleted = true;
-
-            // Disable collider after activation
             GetComponent<Collider2D>().enabled = false;
         }
     }

@@ -96,12 +96,12 @@ public class GameManager : MonoBehaviour
         currentSceneName = scene.name;
         Debug.Log($"📱 Загружена сцена: {scene.name}");
 
-        // 🔥 ВКЛЮЧАЕМ ВСЕ ДВЕРИ ПРИ ЗАГРУЗКЕ СЦЕНЫ
+        // 🔥 ПЕРВЫЙ РАЗ ВКЛЮЧАЕМ ДВЕРИ
         EnableAllDoors();
 
         Invoke(nameof(FixAllDoorColliders), 0.05f);
 
-        // УПРАВЛЕНИЕ МАГОМ: показываем во всех сценах, где есть диалоги
+        // УПРАВЛЕНИЕ МАГОМ
         if (currentStepIndex < storySequence.Count)
         {
             ShowMagInScene(scene.name);
@@ -121,6 +121,10 @@ public class GameManager : MonoBehaviour
         {
             DisableAllTriggersExcept(GetCurrentExpectedTrigger());
         }
+
+        // 🔥 ВТОРОЙ РАЗ ВКЛЮЧАЕМ ДВЕРИ (после всех операций)
+        // Небольшая задержка, чтобы все операции завершились
+        Invoke(nameof(EnableAllDoors), 0.1f);
     }
 
     void FixAllDoorColliders()
@@ -228,9 +232,6 @@ public class GameManager : MonoBehaviour
 
     void DisableAllTriggersExcept(string activeTriggerID)
     {
-        // 🔥 СНАЧАЛА ВКЛЮЧАЕМ ВСЕ ДВЕРИ
-        EnableAllDoors();
-
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
         int enabledCount = 0;
 
@@ -238,6 +239,10 @@ public class GameManager : MonoBehaviour
         {
             if (trigger.CompareTag("Door"))
             {
+                // Убеждаемся, что дверь активна
+                trigger.gameObject.SetActive(true);
+                Collider2D col = trigger.GetComponent<Collider2D>();
+                if (col != null) col.enabled = true;
                 continue;
             }
 
@@ -257,40 +262,12 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning($"⚠️ Триггер с ID '{activeTriggerID}' не найден в этой сцене!");
         }
+
+        // 🔥 ПОСЛЕ ВСЕХ ОПЕРАЦИЙ ЕЩЁ РАЗ ВКЛЮЧАЕМ ДВЕРИ
+        EnableAllDoors();
     }
 
-    // 🆕 МЕТОД ДЛЯ ВКЛЮЧЕНИЯ ДВЕРЕЙ
-    void EnableAllDoors()
-    {
-        GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
 
-        if (doors.Length == 0)
-        {
-            // Не выводим предупреждение, просто в этой сцене нет дверей
-            return;
-        }
-
-        Debug.Log($"🚪 Найдено дверей для включения: {doors.Length}");
-
-        foreach (GameObject door in doors)
-        {
-            // Включаем сам объект
-            if (!door.activeSelf)
-                door.SetActive(true);
-
-            // Включаем коллайдер
-            Collider2D col = door.GetComponent<Collider2D>();
-            if (col != null && !col.enabled)
-                col.enabled = true;
-
-            // Включаем скрипт Door
-            Door doorScript = door.GetComponent<Door>();
-            if (doorScript != null && !doorScript.enabled)
-                doorScript.enabled = true;
-
-            Debug.Log($"🚪 Дверь '{door.name}' принудительно включена");
-        }
-    }
 
     void EnableTrigger(string triggerID)
     {
@@ -383,6 +360,45 @@ public class GameManager : MonoBehaviour
             {
                 obj.SetActive(false);
             }
+        }
+    }
+
+
+    // 🆕 МЕТОД ДЛЯ ВКЛЮЧЕНИЯ ДВЕРЕЙ
+    void EnableAllDoors()
+    {
+        // Ищем ВСЕ объекты с тегом Door (включая неактивные)
+        GameObject[] doors = Resources.FindObjectsOfTypeAll<GameObject>();
+        List<GameObject> foundDoors = new List<GameObject>();
+
+        foreach (GameObject obj in doors)
+        {
+            if (obj.CompareTag("Door") && obj.scene.name == currentSceneName)
+            {
+                foundDoors.Add(obj);
+            }
+        }
+
+        Debug.Log($"🚪 Найдено дверей в сцене '{currentSceneName}': {foundDoors.Count}");
+
+        foreach (GameObject door in foundDoors)
+        {
+            // Принудительно включаем
+            door.SetActive(true);
+
+            Collider2D col = door.GetComponent<Collider2D>();
+            if (col != null)
+            {
+                col.enabled = true;
+            }
+
+            Door doorScript = door.GetComponent<Door>();
+            if (doorScript != null)
+            {
+                doorScript.enabled = true;
+            }
+
+            Debug.Log($"🚪 Дверь '{door.name}' ПРИНУДИТЕЛЬНО включена");
         }
     }
 }

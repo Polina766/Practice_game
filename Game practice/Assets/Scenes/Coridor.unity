@@ -152,16 +152,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
   speakerNames:
   - Girl
-  - House
   - Mage
   - Girl
+  - Mage
+  - Mage
+  - Mage
+  - Girl
+  - Mage
   dialogueLines:
-  - " It\u2019s kinda\u2026 creepy here."
-  - (creaks slightly)
-  - The house is listening
-  - Thanks. That makes it worse.
+  - "What\u2019s in there?"
+  - Nothing...
+  - You said that suspiciously fast
+  - "Because that\u2019s\u2026"
+  - (pause)
+  - the work zone.
+  - You just made that up
+  - "I\u2019m a magician. I make everything up."
   dialogueManager: {fileID: 1084893058}
-  questTrigger: {fileID: 0}
+  questTrigger: {fileID: 459127610}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!61 &459127608
@@ -2858,24 +2866,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
   speakerNames:
   - Girl
+  - House
   - Mage
   - Girl
-  - Mage
-  - Mage
-  - Mage
-  - Girl
-  - Mage
   dialogueLines:
-  - "What\u2019s in there?"
-  - Nothing...
-  - You said that suspiciously fast
-  - "Because that\u2019s\u2026"
-  - (pause)
-  - the work zone.
-  - You just made that up
-  - " I\u2019m a magician. I make everything up."
+  - "It\u2019s kinda\u2026 creepy here."
+  - (creaks slightly)
+  - The house is listening
+  - Thanks. That makes it worse.
   dialogueManager: {fileID: 1084893058}
-  questTrigger: {fileID: 0}
+  questTrigger: {fileID: 8925420494400505617}
   playOnlyOnce: 1
   destroyAfterDialogue: 1
 --- !u!114 &8925420494400505617

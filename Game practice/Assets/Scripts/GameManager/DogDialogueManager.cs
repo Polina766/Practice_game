@@ -63,7 +63,7 @@ public class DogDialogueManager : MonoBehaviour
     {
         public string speaker;
         public string text;
-        public bool isQuestion;  // true если после этой строки нужно показать кнопки
+        public bool isQuestion;
         public string[] optionTexts;
         public bool[] correctOptions;
     }
@@ -90,10 +90,7 @@ public class DogDialogueManager : MonoBehaviour
         isInQuestions = false;
         isShowingOptions = false;
 
-        // Строим все строки
         BuildAllLines();
-
-        // Показываем первую строку
         ShowCurrentLine();
     }
 
@@ -120,7 +117,6 @@ public class DogDialogueManager : MonoBehaviour
         {
             DialogueQuestion q = questions[i];
 
-            // Добавляем строки диалога вопроса
             for (int j = 0; j < q.speakerNames.Length; j++)
             {
                 allLines.Add(new DialogueLine
@@ -131,7 +127,6 @@ public class DogDialogueManager : MonoBehaviour
                 });
             }
 
-            // Добавляем специальную строку-маркер для показа кнопок
             allLines.Add(new DialogueLine
             {
                 speaker = "",
@@ -167,20 +162,18 @@ public class DogDialogueManager : MonoBehaviour
     {
         if (currentLineIndex >= allLines.Count)
         {
-            EndDialogue();
+            FinishDogDialogue();
             return;
         }
 
         DialogueLine line = allLines[currentLineIndex];
 
-        // Если это маркер вопроса - показываем кнопки
         if (line.isQuestion)
         {
             ShowOptions(line.optionTexts, line.correctOptions);
             return;
         }
 
-        // Показываем обычную строку
         currentSpeaker = line.speaker;
         currentFullText = line.text;
         speakerText.text = currentSpeaker;
@@ -216,13 +209,11 @@ public class DogDialogueManager : MonoBehaviour
     {
         isShowingOptions = true;
 
-        // Скрываем текст
         speakerText.gameObject.SetActive(false);
         dialogueText.gameObject.SetActive(false);
         if (continuePrompt != null)
             continuePrompt.SetActive(false);
 
-        // Показываем кнопки
         optionsPanel.SetActive(true);
 
         for (int i = 0; i < optionButtons.Length; i++)
@@ -249,16 +240,13 @@ public class DogDialogueManager : MonoBehaviour
         if (isCorrect)
             correctAnswersCount++;
 
-        // Скрываем кнопки
         optionsPanel.SetActive(false);
 
-        // Показываем текст снова
         speakerText.gameObject.SetActive(true);
         dialogueText.gameObject.SetActive(true);
 
         isShowingOptions = false;
 
-        // Переходим к следующей строке (реакция на выбор)
         currentLineIndex++;
         ShowCurrentLine();
     }
@@ -283,24 +271,6 @@ public class DogDialogueManager : MonoBehaviour
 
         if (continuePrompt != null)
             continuePrompt.SetActive(true);
-    }
-
-    void EndDialogue()
-    {
-        isDogDialogueActive = false;
-        dialoguePanel.SetActive(false);
-        optionsPanel.SetActive(false);
-        speakerText.gameObject.SetActive(true);
-        dialogueText.gameObject.SetActive(true);
-        UnlockPlayer();
-
-        // Уведомляем GameManager о завершении
-        if (questTrigger != null)
-        {
-            questTrigger.NotifyManually();
-        }
-
-        Debug.Log("🐕 Dog dialogue finished");
     }
 
     void LockPlayer()
@@ -330,15 +300,12 @@ public class DogDialogueManager : MonoBehaviour
         if (!isDogDialogueActive) return;
         if (isShowingOptions) return;
 
-        // Обработка ввода
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(1))
         {
-            // Если текст печатается - показываем весь сразу
             if (isTyping)
             {
                 SkipTyping();
             }
-            // Если текст напечатан - переходим к следующей строке
             else if (waitingForNext)
             {
                 NextLine();
@@ -354,5 +321,33 @@ public class DogDialogueManager : MonoBehaviour
             dialogueCompleted = true;
             GetComponent<Collider2D>().enabled = false;
         }
+    }
+
+    // 🔥 ЕДИНСТВЕННЫЙ МЕТОД ЗАВЕРШЕНИЯ ДИАЛОГА
+    void FinishDogDialogue()
+    {
+        isDogDialogueActive = false;
+        dialoguePanel.SetActive(false);
+        optionsPanel.SetActive(false);
+        speakerText.gameObject.SetActive(true);
+        dialogueText.gameObject.SetActive(true);
+        UnlockPlayer();
+
+        if (questTrigger != null)
+        {
+            questTrigger.NotifyManually();
+        }
+
+        GameEnding gameEnding = FindObjectOfType<GameEnding>();
+        if (gameEnding != null)
+        {
+            gameEnding.StartEnding();
+        }
+        else
+        {
+            Debug.LogWarning("GameEnding не найден на сцене!");
+        }
+
+        Debug.Log("🐕 Dog dialogue finished");
     }
 }

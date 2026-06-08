@@ -67,16 +67,23 @@ public class MainMenuUI : MonoBehaviour
     {
         if (continueButton != null)
         {
-            // Кнопка "Продолжить" активна ТОЛЬКО если есть сохранение
-            bool hasSave = SaveSystem.HasSavedGame();
-            continueButton.interactable = hasSave;
+            bool canContinue = false;
 
-            // Меняем цвета кнопки (БЕЗ прозрачности!)
-            ColorBlock colors = continueButton.colors;
-
-            if (hasSave)
+            if (GameManager.Instance != null)
             {
-                // Когда есть сохранение - кнопка нормальная (белая)
+                canContinue = GameManager.Instance.CanContinue();
+            }
+            else
+            {
+                // Если GameManager ещё нет, проверяем только наличие сохранения
+                canContinue = SaveSystem.HasSavedGame();
+            }
+
+            continueButton.interactable = canContinue;
+
+            ColorBlock colors = continueButton.colors;
+            if (canContinue)
+            {
                 colors.normalColor = normalColor;
                 colors.highlightedColor = normalColor * 1.1f;
                 colors.pressedColor = normalColor * 0.9f;
@@ -85,14 +92,12 @@ public class MainMenuUI : MonoBehaviour
             }
             else
             {
-                // Когда нет сохранения - кнопка тёмно-серая (полностью непрозрачная)
                 colors.normalColor = disabledColor;
                 colors.highlightedColor = disabledColor;
                 colors.pressedColor = disabledColor;
                 colors.selectedColor = disabledColor;
                 colors.disabledColor = disabledColor;
             }
-
             continueButton.colors = colors;
         }
     }

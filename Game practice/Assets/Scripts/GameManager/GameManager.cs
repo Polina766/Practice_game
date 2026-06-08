@@ -12,9 +12,14 @@ public class GameManager : MonoBehaviour
     [Header("Состояние игры")]
     public int currentStepIndex = 0;
     public string currentSceneName = "";
+    private bool isPrologueActive = false;
+    private bool isGameCompleted = false;
 
     [Header("Компоненты")]
     public GameObject playerPrefab;
+
+    public string prologueSceneName = "Prologue";
+    public string firstGameSceneName = "Hall";
 
     private bool isLoadingGame = false;
 
@@ -70,7 +75,10 @@ public class GameManager : MonoBehaviour
         SaveSystem.DeleteSave();
         currentStepIndex = 0;
         isLoadingGame = false;
-        SceneManager.LoadScene("Hall");
+        isPrologueActive = true;
+        isGameCompleted = false;
+
+        SceneManager.LoadScene(prologueSceneName);
     }
 
     public void ContinueGame()
@@ -78,6 +86,12 @@ public class GameManager : MonoBehaviour
         if (!SaveSystem.HasSavedGame())
         {
             Debug.LogWarning("⚠️ Нет сохранённой игры!");
+            return;
+        }
+
+        if (isGameCompleted)
+        {
+            Debug.LogWarning("⚠️ Игра уже пройдена! Начните новую игру.");
             return;
         }
 
@@ -91,17 +105,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void MarkGameAsCompleted()
+    {
+        if (isGameCompleted) return;
+
+        isGameCompleted = true;
+        SaveSystem.DeleteSave();
+        Debug.Log("🏆 Игра официально завершена! Сохранение удалено.");
+    }
+
+    public bool CanContinue()
+    {
+        if (isGameCompleted) return false;
+        return SaveSystem.HasSavedGame();
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = scene.name;
         Debug.Log($"📱 Загружена сцена: {scene.name}");
 
-        // 🔥 ПЕРВЫЙ РАЗ ВКЛЮЧАЕМ ДВЕРИ
-        EnableAllDoors();
+        if (isPrologueActive && scene.name == prologueSceneName)
+        {
+            Debug.Log("🎬 Сцена пролога, игровые системы отключены");
+            return;
+        }
 
+        EnableAllDoors();
         Invoke(nameof(FixAllDoorColliders), 0.05f);
 
-        // УПРАВЛЕНИЕ МАГОМ
         if (currentStepIndex < storySequence.Count)
         {
             ShowMagInScene(scene.name);
@@ -122,8 +154,6 @@ public class GameManager : MonoBehaviour
             DisableAllTriggersExcept(GetCurrentExpectedTrigger());
         }
 
-        // 🔥 ВТОРОЙ РАЗ ВКЛЮЧАЕМ ДВЕРИ (после всех операций)
-        // Небольшая задержка, чтобы все операции завершились
         Invoke(nameof(EnableAllDoors), 0.1f);
     }
 
@@ -160,8 +190,10 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("🎉 Игра пройдена! Поздравляю!");
+                    Debug.Log("🎉 Все квесты пройдены! Ожидаем завершающий диалог...");
                     HideMagInCurrentScene();
+                    // НЕ УДАЛЯЕМ СОХРАНЕНИЕ ЗДЕСЬ!
+                    // Игра завершится только при появлении чёрного экрана
                 }
             }
             else
@@ -173,6 +205,8 @@ public class GameManager : MonoBehaviour
 
     public void AutoSave()
     {
+        if (isGameCompleted) return;
+
         GameData data = new GameData();
         data.currentStepIndex = currentStepIndex;
         data.currentSceneName = SceneManager.GetActiveScene().name;
@@ -190,13 +224,14 @@ public class GameManager : MonoBehaviour
 
     public void SaveAndGoToMenu()
     {
+        if (isGameCompleted) return;
+
         AutoSave();
         SceneManager.LoadScene("Menu");
     }
 
     void RestoreTriggersState()
     {
-        // Сначала включаем все двери
         EnableAllDoors();
 
         QuestStepTrigger[] allTriggers = FindObjectsOfType<QuestStepTrigger>(true);
@@ -239,7 +274,6 @@ public class GameManager : MonoBehaviour
         {
             if (trigger.CompareTag("Door"))
             {
-                // Убеждаемся, что дверь активна
                 trigger.gameObject.SetActive(true);
                 Collider2D col = trigger.GetComponent<Collider2D>();
                 if (col != null) col.enabled = true;
@@ -263,11 +297,8 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning($"⚠️ Триггер с ID '{activeTriggerID}' не найден в этой сцене!");
         }
 
-        // 🔥 ПОСЛЕ ВСЕХ ОПЕРАЦИЙ ЕЩЁ РАЗ ВКЛЮЧАЕМ ДВЕРИ
         EnableAllDoors();
     }
-
-
 
     void EnableTrigger(string triggerID)
     {
@@ -308,13 +339,11 @@ public class GameManager : MonoBehaviour
     {
         HideMagInAllScenes();
 
-        // Ищем ВСЕ объекты с тегом Mag (включая выключенные)
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
         GameObject mag = null;
 
         foreach (GameObject obj in allObjects)
         {
-            // Проверяем, что объект имеет тег Mag и находится в текущей сцене
             if (obj.CompareTag("Mag") && obj.scene.name == sceneName)
             {
                 mag = obj;
@@ -322,10 +351,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Альтернативный поиск по имени (если первый не сработал)
         if (mag == null)
         {
-            mag = GameObject.Find("Mage"); // "Mage" - имя вашего объекта мага
+            mag = GameObject.Find("Mage");
         }
 
         if (mag != null)
@@ -363,11 +391,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    // 🆕 МЕТОД ДЛЯ ВКЛЮЧЕНИЯ ДВЕРЕЙ
     void EnableAllDoors()
     {
-        // Ищем ВСЕ объекты с тегом Door (включая неактивные)
         GameObject[] doors = Resources.FindObjectsOfTypeAll<GameObject>();
         List<GameObject> foundDoors = new List<GameObject>();
 
@@ -383,7 +408,6 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject door in foundDoors)
         {
-            // Принудительно включаем
             door.SetActive(true);
 
             Collider2D col = door.GetComponent<Collider2D>();
@@ -400,5 +424,18 @@ public class GameManager : MonoBehaviour
 
             Debug.Log($"🚪 Дверь '{door.name}' ПРИНУДИТЕЛЬНО включена");
         }
+    }
+
+    public void PrologueFinished()
+    {
+        if (!isPrologueActive) return;
+
+        Debug.Log("🎬 Пролог завершён, начинаем основную игру");
+        isPrologueActive = false;
+
+        currentStepIndex = 0;
+        isLoadingGame = false;
+
+        SceneManager.LoadScene(firstGameSceneName);
     }
 }

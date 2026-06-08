@@ -3940,7 +3940,7 @@ MonoBehaviour:
     optionTexts:
     - The mag doesn't have to explain
     - Explanations later. The bone too
-    - Let's figure this out first; then the old man will bring bones
+    - First this, then the old man brings bones.
     correctOptions: 000001
   - speakerNames:
     - Personality A
@@ -3977,7 +3977,6 @@ MonoBehaviour:
   finalImageDuration: 2
   blackScreen: {fileID: 202386521}
   blackScreenFadeTime: 1
-  blackScreenDisplayTime: 2
   theEndText: {fileID: 1923934000}
 --- !u!224 &8324144605378769491
 RectTransform:

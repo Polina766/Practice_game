@@ -6,23 +6,21 @@ using TMPro;
 public class GameEnding : MonoBehaviour
 {
     [Header("Финальная картинка")]
-    public GameObject finalImage;           // Картинка с персонажами
-    public float finalImageDuration = 2f;   // Сколько секунд показывать картинку
+    public GameObject finalImage;
+    public float finalImageDuration = 4f;
 
-    [Header("Черный экран")]
-    public GameObject blackScreen;           // Черный экран (Image с черным цветом)
-    public float blackScreenFadeTime = 1f;   // Время появления черного экрана
-    public float blackScreenDisplayTime = 2f; // Сколько секунд показывать черный экран с текстом
+    [Header("Черный экран (поверх картинки)")]
+    public GameObject blackScreen;
+    public float blackScreenFadeTime = 1f;
 
     [Header("Текст The End")]
-    public TextMeshProUGUI theEndText;       // Текст "The End"
+    public TextMeshProUGUI theEndText;
 
     private CanvasGroup blackCanvasGroup;
-    private CanvasGroup imageCanvasGroup;
+    private bool isEndingStarted = false;
 
     void Start()
     {
-        // Скрываем всё в начале
         if (finalImage != null)
             finalImage.SetActive(false);
 
@@ -41,6 +39,8 @@ public class GameEnding : MonoBehaviour
 
     public void StartEnding()
     {
+        if (isEndingStarted) return;
+        isEndingStarted = true;
         StartCoroutine(PlayEndingSequence());
     }
 
@@ -50,24 +50,17 @@ public class GameEnding : MonoBehaviour
         if (finalImage != null)
         {
             finalImage.SetActive(true);
-            Debug.Log("📸 Финальная картинка показана");
+            Debug.Log("📸 Финальная картинка показана на 4 секунды");
         }
 
-        // Ждём пару секунд
+        // Ждём 4 секунды
         yield return new WaitForSeconds(finalImageDuration);
 
-        // 2. Скрываем картинку
-        if (finalImage != null)
-        {
-            finalImage.SetActive(false);
-        }
-
-        // 3. Показываем черный экран
+        // 2. Показываем черный экран ПОВЕРХ картинки
         if (blackScreen != null)
         {
             blackScreen.SetActive(true);
 
-            // Плавно появляем черный экран
             float elapsed = 0f;
             while (elapsed < blackScreenFadeTime)
             {
@@ -78,16 +71,23 @@ public class GameEnding : MonoBehaviour
             blackCanvasGroup.alpha = 1f;
         }
 
-        // 4. Показываем текст "The End"
+        // 🔥 КОГДА ЧЁРНЫЙ ЭКРАН ПОЯВИЛСЯ - ИГРА ЗАВЕРШЕНА!
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.MarkGameAsCompleted();
+            Debug.Log("🏆 Игра помечена как завершённая (чёрный экран)");
+        }
+
+        // 3. Показываем текст "The End"
         if (theEndText != null)
         {
             theEndText.gameObject.SetActive(true);
         }
 
-        // Ждём
-        yield return new WaitForSeconds(blackScreenDisplayTime);
+        // Ждём 2 секунды перед возвратом в меню
+        yield return new WaitForSeconds(2f);
 
-        // 5. Возвращаемся в главное меню или перезапускаем игру
+        // 4. Возвращаемся в главное меню
         SceneManager.LoadScene("Menu");
     }
 }

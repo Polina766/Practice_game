@@ -203,7 +203,7 @@ public class CauldronPuzzle : MonoBehaviour
 
         if (allCorrect && selectedIndices.Count == correctSlots.Length)
         {
-            Debug.Log("Зелье готово! 🧪");
+            
             puzzleCompleted = true;
 
             // Уведомляем GameManager
@@ -223,7 +223,7 @@ public class CauldronPuzzle : MonoBehaviour
         }
         else
         {
-            Debug.Log("Ошибка! Сброс...");
+            
             yield return new WaitForSecondsRealtime(0.3f);
 
             // Возвращаем размеры (если объект ещё существует)

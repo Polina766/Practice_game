@@ -52,13 +52,13 @@ public class SceneMusicManager : MonoBehaviour
                 {
                     AudioManager.Instance.PlayMusic(gameplayMusic);
                     isPlayingGameplayMusic = true;
-                    Debug.Log($"Включена игровая музыка для сцены: {currentSceneName}");
+                    
                 }
             }
             else
             {
                 // Музыка уже играет - НЕ перезапускаем!
-                Debug.Log($"Музыка уже играет, не перезапускаем: {currentSceneName}");
+                
             }
         }
         else
@@ -68,7 +68,7 @@ public class SceneMusicManager : MonoBehaviour
             {
                 AudioManager.Instance.PlayMusic(mainMenuMusic);
                 isPlayingGameplayMusic = false;
-                Debug.Log($"Включена музыка главного меню для сцены: {currentSceneName}");
+                
             }
         }
     }

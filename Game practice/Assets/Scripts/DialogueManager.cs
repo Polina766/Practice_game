@@ -38,7 +38,7 @@ public class DialogueManager : MonoBehaviour
 
         if (speakerNames.Length != dialogueLines.Length)
         {
-            Debug.LogError("Количество имён и строк не совпадает!");
+            
             return;
         }
 

@@ -114,14 +114,14 @@ public class Door : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.HideMagInCurrentScene();
-            Debug.Log($"🚪 Маг скрыт перед уходом из сцены");
+            
         }
 
         string currentScene = SceneManager.GetActiveScene().name;
         string saveKey = currentScene + "_" + doorID;
         SceneTransfer.doorPositions[saveKey] = transform.position;
 
-        Debug.Log($"💾 Сохранено: {saveKey} = {transform.position}");
+        
 
         Cursor.SetCursor(defaultCursor, Vector2.zero, cursorMode);
         SceneManager.LoadScene(sceneToLoad);

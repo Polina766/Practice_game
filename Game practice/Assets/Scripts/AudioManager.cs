@@ -64,7 +64,7 @@ public class AudioManager : MonoBehaviour
         // Если эта же музыка уже играет - ничего не делаем (не перезапускаем)
         if (musicSource.clip == clip && musicSource.isPlaying && !restartIfSame)
         {
-            Debug.Log($"Музыка '{clip.name}' уже играет, не перезапускаем");
+            
             return;
         }
 
@@ -72,7 +72,7 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = clip;
         musicSource.loop = true;
         musicSource.Play();
-        Debug.Log($"Запущена музыка: {clip.name}");
+        
     }
 
     public void PlaySFX(AudioClip clip, float volumeScale = 1f)

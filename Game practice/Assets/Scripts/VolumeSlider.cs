@@ -10,7 +10,7 @@ public class VolumeSliders : MonoBehaviour
     {
         if (AudioManager.Instance == null)
         {
-            Debug.LogError("AudioManager не найден!");
+            
             return;
         }
 

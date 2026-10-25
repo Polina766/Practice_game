@@ -41,7 +41,7 @@ public class MainMenuUI : MonoBehaviour
         {
             // Если GameManager ещё не создан (например, в меню нет GameManager)
             // Создаём его или просто загружаем сцену
-            Debug.LogWarning("GameManager не найден, создаём новый...");
+            
             GameObject gm = new GameObject("GameManager");
             gm.AddComponent<GameManager>();
             GameManager.Instance.NewGame();
@@ -104,7 +104,7 @@ public class MainMenuUI : MonoBehaviour
 
     void ExitGame()
     {
-        Debug.Log("Выход из игры");
+        
         Application.Quit();
 
 #if UNITY_EDITOR

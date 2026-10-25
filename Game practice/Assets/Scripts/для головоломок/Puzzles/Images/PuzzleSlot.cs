@@ -15,7 +15,7 @@ public class PuzzleSlot : MonoBehaviour
             col.isTrigger = false;
         }
 
-        Debug.Log($"Слот {slotIndex} готов");
+        
     }
 
     public void PlacePiece(MovePuzzle piece)

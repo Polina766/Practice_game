@@ -91,6 +91,6 @@ public class PauseManager : MonoBehaviour
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
 
-        Debug.Log("Пауза снята, физика должна работать");
+       
     }
 }

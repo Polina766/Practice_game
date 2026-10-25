@@ -78,7 +78,7 @@ public class DogDialogueManager : MonoBehaviour
 
     public void StartDialogue()
     {
-        Debug.Log("🐕 Dog dialogue started");
+        
         isDogDialogueActive = true;
 
         LockPlayer();
@@ -235,7 +235,7 @@ public class DogDialogueManager : MonoBehaviour
 
     void OnOptionSelected(int optionIndex, bool isCorrect)
     {
-        Debug.Log($"Option {optionIndex + 1}, correct: {isCorrect}");
+        
 
         if (isCorrect)
             correctAnswersCount++;
@@ -323,7 +323,7 @@ public class DogDialogueManager : MonoBehaviour
         }
     }
 
-    // 🔥 ЕДИНСТВЕННЫЙ МЕТОД ЗАВЕРШЕНИЯ ДИАЛОГА
+   
     void FinishDogDialogue()
     {
         isDogDialogueActive = false;
@@ -345,9 +345,9 @@ public class DogDialogueManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("GameEnding не найден на сцене!");
+            
         }
 
-        Debug.Log("🐕 Dog dialogue finished");
+       
     }
 }

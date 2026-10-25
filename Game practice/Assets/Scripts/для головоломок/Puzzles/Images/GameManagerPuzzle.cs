@@ -34,7 +34,7 @@ public class GameManagerPuzzle : MonoBehaviour
         allPieces = FindObjectsOfType<MovePuzzle>();
         allSlots = FindObjectsOfType<PuzzleSlot>();
 
-        Debug.Log("Головоломка готова. Ожидаем входа в триггер...");
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -48,7 +48,7 @@ public class GameManagerPuzzle : MonoBehaviour
     void ActivatePuzzle()
     {
         isPuzzleActive = true;
-        Debug.Log("🎮 Игрок вошёл в триггер! Включаем головоломку!");
+        
 
         // 🔒 БЛОКИРУЕМ ИГРОКА
         LockPlayer();
@@ -93,7 +93,7 @@ public class GameManagerPuzzle : MonoBehaviour
             // Отключаем управление
             playerController.enabled = false;
 
-            Debug.Log("🔒 Игрок ЗАБЛОКИРОВАН (головоломка)");
+            
         }
 
         if (playerAnimator != null)
@@ -109,7 +109,7 @@ public class GameManagerPuzzle : MonoBehaviour
         if (playerController != null)
         {
             playerController.enabled = true;
-            Debug.Log("🔓 Игрок РАЗБЛОКИРОВАН (головоломка закрыта)");
+            
         }
     }
 
@@ -120,7 +120,7 @@ public class GameManagerPuzzle : MonoBehaviour
         if (pieceIndex == slotIndex)
         {
             piecesInPlace++;
-            Debug.Log($"✅ Пазл {pieceIndex} на своём месте! Всего на месте: {piecesInPlace}/{totalPieces}");
+            
         }
 
         if (piecesInPlace == totalPieces)
@@ -136,33 +136,33 @@ public class GameManagerPuzzle : MonoBehaviour
         if (pieceIndex == slotIndex)
         {
             piecesInPlace--;
-            Debug.Log($"❌ Пазл {pieceIndex} убрали с места. Всего на месте: {piecesInPlace}/{totalPieces}");
+            
         }
     }
 
     void Win()
     {
-        Debug.Log("🏆 ПОБЕДА! Все 25 пазлов на своих местах! 🏆");
+        
         puzzleCompleted = true;
 
         // Уведомляем GameManager (если есть QuestTrigger)
         if (questTrigger != null)
         {
             questTrigger.NotifyManually();
-            Debug.Log($"✅ Уведомлён GameManager: {questTrigger.triggerID}");
+            
         }
 
         if (winButton != null)
         {
             winButton.SetActive(true);
-            Debug.Log("✨ Крестик появился! ✨");
+            
         }
     }
 
     // Вызывается при нажатии на крестик
     public void ClosePuzzle()
     {
-        Debug.Log("❌ Закрываем головоломку по нажатию на крестик");
+        
 
         if (puzzleContainer != null)
         {

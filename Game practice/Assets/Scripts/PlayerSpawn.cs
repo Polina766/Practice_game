@@ -26,14 +26,14 @@ public class PlayerSpawn : MonoBehaviour
         {
             // Телепортируем игрока
             transform.position = new Vector3(savedPosition.x, transform.position.y, transform.position.z);
-            Debug.Log($"Игрок телепортирован к {foundKey}: {savedPosition}");
+            
 
             // Удаляем использованную позицию
             SceneTransfer.doorPositions.Remove(foundKey);
         }
         else
         {
-            Debug.Log($"Нет сохранённой позиции для сцены {currentScene}");
+            
         }
     }
 }

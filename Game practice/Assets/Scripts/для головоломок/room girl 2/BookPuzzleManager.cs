@@ -44,7 +44,7 @@ public class BookPuzzleManager : MonoBehaviour
                 // Ставим книгу на позицию слота
                 books[bookIndex].SetPosition(slots[i].slotRect.anchoredPosition);
                 bookPositions[books[bookIndex]] = slots[i].slotRect.anchoredPosition;
-                Debug.Log($"Слот {slots[i].name} (индекс {slots[i].requiredBookIndex}) содержит книгу {books[bookIndex].name} (индекс {books[bookIndex].bookIndex})");
+                
             }
         }
     }
@@ -74,7 +74,7 @@ public class BookPuzzleManager : MonoBehaviour
         // Позиция целевого слота
         Vector2 targetSlotPos = targetSlot.slotRect.anchoredPosition;
 
-        Debug.Log($"Перетаскиваем {draggedBook.name} из слота {sourceSlot?.name ?? "ниоткуда"} в слот {targetSlot.name}, там книга {targetBook?.name ?? "пусто"}");
+        
 
         if (sourceSlot != null)
         {
@@ -85,7 +85,7 @@ public class BookPuzzleManager : MonoBehaviour
                 targetBook.SetPosition(bookPositions[draggedBook]);
                 bookPositions[targetBook] = bookPositions[draggedBook];
                 slotContents[sourceSlot] = targetBook;
-                Debug.Log($"{targetBook.name} перемещена в слот {sourceSlot.name}");
+                
             }
             else
             {
@@ -99,7 +99,7 @@ public class BookPuzzleManager : MonoBehaviour
         bookPositions[draggedBook] = targetSlotPos;
         slotContents[targetSlot] = draggedBook;
 
-        Debug.Log($"{draggedBook.name} перемещена в слот {targetSlot.name}");
+        
 
         CheckWin();
     }
@@ -116,7 +116,7 @@ public class BookPuzzleManager : MonoBehaviour
         }
 
         won = true;
-        Debug.Log("ПОБЕДА!");
+        
         if (closeButton != null)
             closeButton.SetActive(true);
     }

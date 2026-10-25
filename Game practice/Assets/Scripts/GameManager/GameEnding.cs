@@ -50,7 +50,7 @@ public class GameEnding : MonoBehaviour
         if (finalImage != null)
         {
             finalImage.SetActive(true);
-            Debug.Log("📸 Финальная картинка показана на 4 секунды");
+           
         }
 
         // Ждём 4 секунды
@@ -75,7 +75,7 @@ public class GameEnding : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.MarkGameAsCompleted();
-            Debug.Log("🏆 Игра помечена как завершённая (чёрный экран)");
+            
         }
 
         // 3. Показываем текст "The End"

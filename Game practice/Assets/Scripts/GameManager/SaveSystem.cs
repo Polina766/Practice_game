@@ -24,11 +24,11 @@ public static class SaveSystem
             FileStream stream = new FileStream(savePath, FileMode.Create);
             formatter.Serialize(stream, data);
             stream.Close();
-            Debug.Log("✅ Игра сохранена: шаг " + data.currentStepIndex + " на сцене " + data.currentSceneName);
+            
         }
         catch (System.Exception e)
         {
-            Debug.LogError("❌ Ошибка сохранения: " + e.Message);
+            
         }
     }
 
@@ -42,18 +42,18 @@ public static class SaveSystem
                 FileStream stream = new FileStream(savePath, FileMode.Open);
                 GameData data = formatter.Deserialize(stream) as GameData;
                 stream.Close();
-                Debug.Log("✅ Игра загружена: шаг " + data.currentStepIndex + " на сцене " + data.currentSceneName);
+                
                 return data;
             }
             catch (System.Exception e)
             {
-                Debug.LogError("❌ Ошибка загрузки: " + e.Message);
+                
                 return null;
             }
         }
         else
         {
-            Debug.Log("ℹ️ Файл сохранения не найден");
+            
             return null;
         }
     }
@@ -68,7 +68,7 @@ public static class SaveSystem
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            Debug.Log("🗑️ Сохранение удалено");
+            
         }
     }
 }

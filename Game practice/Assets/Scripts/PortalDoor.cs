@@ -76,7 +76,7 @@ public class PortalDoor : Door
         if (hasAppeared) return;
         hasAppeared = true;
 
-        Debug.Log($"✨ Портал '{gameObject.name}' появился после {questCompleteID}!");
+        
 
         if (appearSound != null)
             AudioSource.PlayClipAtPoint(appearSound, transform.position);
@@ -107,7 +107,7 @@ public class PortalDoor : Door
         if (col != null)
             col.enabled = true;
 
-        Debug.Log("✅ Портал полностью появился!");
+        
     }
 
     void SetPortalAlpha(float alpha)

@@ -67,7 +67,7 @@ public class PrologueManager : MonoBehaviour
             ShowContinueButton();
         }
 
-        Debug.Log("📜 Пролог закончен, кнопка показана");
+        
     }
 
     void ShowContinueButton()
@@ -80,7 +80,7 @@ public class PrologueManager : MonoBehaviour
 
     void OnContinueClicked()
     {
-        Debug.Log("🔘 Нажата кнопка 'Продолжить'");
+       
 
         // Запускаем следующую сцену
         if (GameManager.Instance != null)

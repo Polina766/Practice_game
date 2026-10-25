@@ -31,7 +31,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (playOnlyOnce && hasBeenPlayed)
         {
-            Debug.Log("Диалог уже был проигран и не повторится");
+            
             return;
         }
 
@@ -57,16 +57,7 @@ public class DialogueTrigger : MonoBehaviour
         // Небольшая задержка после закрытия диалога
         yield return new WaitForSeconds(0.1f);
 
-        // 🔥 ОТПРАВЛЯЕМ УВЕДОМЛЕНИЕ В GAMEMANAGER
-        if (questTrigger != null)
-        {
-            questTrigger.NotifyManually();
-            Debug.Log($"✅ Диалог завершён, уведомлён GameManager: {questTrigger.triggerID}");
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ QuestStepTrigger не найден для отправки уведомления");
-        }
+        
 
         // Уничтожаем объект после диалога (если нужно)
         if (destroyAfterDialogue)

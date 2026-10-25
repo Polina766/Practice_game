@@ -25,14 +25,14 @@ public class MovePuzzle : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
 
         gameManager = FindObjectOfType<GameManagerPuzzle>();
 
-        Debug.Log($"Пазл {pieceIndex} готов");
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (isLocked) // Если на правильном месте - нельзя двигать
         {
-            Debug.Log($"Пазл {pieceIndex} на своём месте! Его нельзя двигать.");
+            
             return;
         }
 
@@ -81,7 +81,7 @@ public class MovePuzzle : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
                 currentSlot = slotUnderMouse;
                 slot.PlacePiece(this);
 
-                Debug.Log($"Пазл {pieceIndex} поставлен в слот {slot.slotIndex}");
+                
 
                 // ПРОВЕРКА: правильное ли это место?
                 if (pieceIndex == slot.slotIndex)
@@ -89,14 +89,14 @@ public class MovePuzzle : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
                     // НА ПРАВИЛЬНОМ МЕСТЕ - блокируем!
                     isLocked = true;
                     canvasGroup.blocksRaycasts = false; // Нельзя кликнуть
-                    Debug.Log($"🔒 Пазл {pieceIndex} на СВОЁМ месте! Заблокирован, нельзя двигать.");
+                    
                 }
                 else
                 {
                     // НЕ НА ПРАВИЛЬНОМ МЕСТЕ - можно двигать
                     isLocked = false;
                     canvasGroup.blocksRaycasts = true;
-                    Debug.Log($"❌ Пазл {pieceIndex} НЕ на своём месте (слот {slot.slotIndex}). Можно двигать.");
+                    
                 }
 
                 if (gameManager != null)

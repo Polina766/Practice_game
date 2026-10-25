@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
                 if (moveIndicator != null)
                     moveIndicator.ShowAtPosition(clickTarget);
 
-                Debug.Log("✅ Стрелочка поставлена! Цель: " + clickTarget);
+                
             }
             
         }
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
             stuckTime += Time.deltaTime;
             if (stuckTime > 0.5f)
             {
-                Debug.Log("⚠️ Персонаж застрял! Стрелочка исчезает.");
+                
                 StopMovingToClick();
                 return;
             }
@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
         // Проверка достижения цели
         if (Mathf.Abs(transform.position.x - clickTarget.x) < 0.1f)
         {
-            Debug.Log("✅ Дошли до цели!");
+            
             StopMovingToClick();
         }
     }
@@ -249,7 +249,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!hit.collider.CompareTag("Floor"))
             {
-                Debug.Log("Препятствие на пути: " + hit.collider.gameObject.name);
+                
                 return false;
             }
         }
@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour
         // Начинаем движение к двери
         targetDoor = door;
         isMovingToDoor = true;
-        Debug.Log("Идём к двери...");
+        
     }
 
     public void StopMovingToDoor()

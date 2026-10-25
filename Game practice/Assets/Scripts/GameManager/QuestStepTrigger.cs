@@ -38,7 +38,7 @@ public class QuestStepTrigger : MonoBehaviour
 
         if (triggerOnExit && other.CompareTag("Player") && !hasNotified)
         {
-            Debug.Log($"🚪 Игрок вышел из триггера '{triggerID}', отправляем уведомление!");
+            
             NotifyQuestCompleted();
         }
     }
@@ -60,7 +60,7 @@ public class QuestStepTrigger : MonoBehaviour
 
         if (triggerOnExit && other.CompareTag("Player") && !hasNotified)
         {
-            Debug.Log($"🚪 Игрок вышел из триггера '{triggerID}', отправляем уведомление!");
+            
             NotifyQuestCompleted();
         }
     }
@@ -81,7 +81,7 @@ public class QuestStepTrigger : MonoBehaviour
     // ✅ ДОБАВЬТЕ ЭТОТ МЕТОД
     public void NotifyManually()
     {
-        Debug.Log($"🎯 QuestStepTrigger '{triggerID}' вызван РУЧНО!");
+        
         NotifyQuestCompleted();
     }
 

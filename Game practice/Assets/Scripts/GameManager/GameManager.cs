@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
-        Debug.Log("🎮 Начинаем новую игру");
+        
         SaveSystem.DeleteSave();
         SceneTransfer.doorPositions.Clear(); // сброс позиций дверей
         currentStepIndex = 0;
@@ -86,17 +86,17 @@ public class GameManager : MonoBehaviour
     {
         if (!SaveSystem.HasSavedGame())
         {
-            Debug.LogWarning("⚠️ Нет сохранённой игры!");
+            
             return;
         }
 
         if (isGameCompleted)
         {
-            Debug.LogWarning("⚠️ Игра уже пройдена! Начните новую игру.");
+            
             return;
         }
 
-        Debug.Log("📀 Загружаем сохранённую игру");
+        
         GameData data = SaveSystem.LoadGame();
         if (data != null)
         {
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         isGameCompleted = true;
         SaveSystem.DeleteSave();
-        Debug.Log("🏆 Игра официально завершена! Сохранение удалено.");
+        
     }
 
     public bool CanContinue()
@@ -124,11 +124,11 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = scene.name;
-        Debug.Log($"📱 Загружена сцена: {scene.name}");
+        
 
         if (isPrologueActive && scene.name == prologueSceneName)
         {
-            Debug.Log("🎬 Сцена пролога, игровые системы отключены");
+           
             return;
         }
 
@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
             {
                 col.enabled = false;
                 col.enabled = true;
-                Debug.Log($"🔧 Починен коллайдер: {door.name}");
+                
             }
         }
     }
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
             if (expectedID == triggerID)
             {
-                Debug.Log($"✅ Шаг {currentStepIndex + 1}/{storySequence.Count} выполнен: {triggerID}");
+                
                 currentStepIndex++;
                 AutoSave();
 
@@ -191,15 +191,14 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("🎉 Все квесты пройдены! Ожидаем завершающий диалог...");
+                    
                     HideMagInCurrentScene();
-                    // НЕ УДАЛЯЕМ СОХРАНЕНИЕ ЗДЕСЬ!
-                    // Игра завершится только при появлении чёрного экрана
+                    
                 }
             }
             else
             {
-                Debug.Log($"⚠️ Сейчас ожидается '{expectedID}', а вы активировали '{triggerID}'");
+                
             }
         }
     }
@@ -261,7 +260,7 @@ public class GameManager : MonoBehaviour
             if (player != null && (data.playerPosX != 0 || data.playerPosY != 0))
             {
                 player.transform.position = new Vector3(data.playerPosX, data.playerPosY, 0);
-                Debug.Log($"📍 Восстановлена позиция игрока: ({data.playerPosX}, {data.playerPosY})");
+                
             }
         }
     }
@@ -285,7 +284,7 @@ public class GameManager : MonoBehaviour
             {
                 trigger.gameObject.SetActive(true);
                 enabledCount++;
-                Debug.Log($"✅ Активирован квестовый триггер: {trigger.triggerID}");
+                
             }
             else
             {
@@ -295,7 +294,7 @@ public class GameManager : MonoBehaviour
 
         if (enabledCount == 0 && activeTriggerID != "GameComplete")
         {
-            Debug.LogWarning($"⚠️ Триггер с ID '{activeTriggerID}' не найден в этой сцене!");
+            
         }
 
         EnableAllDoors();
@@ -309,7 +308,7 @@ public class GameManager : MonoBehaviour
             if (trigger.triggerID == triggerID)
             {
                 trigger.gameObject.SetActive(true);
-                Debug.Log($"🔓 Включён квестовый триггер: {triggerID}");
+                
                 break;
             }
         }
@@ -362,11 +361,11 @@ public class GameManager : MonoBehaviour
             mag.SetActive(true);
             currentMagObject = mag;
             currentMagScene = sceneName;
-            Debug.Log($"✨ Маг '{mag.name}' появился в сцене: {sceneName}");
+            
         }
         else
         {
-            Debug.LogError($"❌ Маг с тегом 'Mag' не найден в сцене {sceneName}!");
+            
         }
     }
 
@@ -375,7 +374,7 @@ public class GameManager : MonoBehaviour
         if (currentMagObject != null)
         {
             currentMagObject.SetActive(false);
-            Debug.Log($"😴 Маг скрыт в сцене: {currentMagScene}");
+            
             currentMagObject = null;
         }
     }
@@ -405,7 +404,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"🚪 Найдено дверей в сцене '{currentSceneName}': {foundDoors.Count}");
+        
 
         foreach (GameObject door in foundDoors)
         {
@@ -423,7 +422,7 @@ public class GameManager : MonoBehaviour
                 doorScript.enabled = true;
             }
 
-            Debug.Log($"🚪 Дверь '{door.name}' ПРИНУДИТЕЛЬНО включена");
+            
         }
     }
 
@@ -431,7 +430,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isPrologueActive) return;
 
-        Debug.Log("🎬 Пролог завершён, начинаем основную игру");
+        
         isPrologueActive = false;
 
         currentStepIndex = 0;

@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("🎮 Начинаем новую игру");
         SaveSystem.DeleteSave();
+        SceneTransfer.doorPositions.Clear(); // сброс позиций дверей
         currentStepIndex = 0;
         isLoadingGame = false;
         isPrologueActive = true;
